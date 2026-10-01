@@ -174,7 +174,7 @@ git init
 git add .
 git commit -m "feat: initial commit for React 19 + Vite frontend"
 git branch -M main
-git remote add origin https://github.com/ShadowV3N0M/Employee_Frontend.git
+git remote add origin https://github.com/<your_Username>/Employee_Frontend.git ##ShadowV3N0M
 git push -u origin main
 ```
 
