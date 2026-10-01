@@ -145,6 +145,12 @@ employee_frontend/
   - **`user`:** Sanitized directory view (Name, Email, Department, Status) with an informative confidentiality notice informing that compensation and residential address are restricted to managers and administrators.
 - **Event Isolation:** Handled `e.stopPropagation()` on row action buttons to allow direct triggering of Edit/History/Salary modals without opening the detail modal.
 
+### 7. Full Admin User Management CRUD (`Users.jsx`)
+- **Direct User Creation (`+ Add User` Modal):** Admins can provision new users directly with initial role assignment (`user`, `manager`, `admin`), password, and optional email address.
+- **Permanent User Deletion (`DELETE /auth/users/{username}`):** Added a dedicated **Delete** button with a confirmation safety guard (`window.confirm`). Permanently deletes the user account while preventing self-deletion.
+- **Account Status Toggling:** Admins can quickly activate or deactivate accounts with immediate server synchronization.
+- **Real-Time Search & Filtering:** Instant filter bar to search users by username, email, or assigned role.
+
 ---
 
 ## Roadmap & Features Status
@@ -152,6 +158,7 @@ employee_frontend/
 *(Fully synchronized with backend roadmap)*
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
+- [x] **Full Admin User CRUD** - Create user modal, role promotion, status toggling, and permanent deletion with self-delete protection
 - [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls
 - [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk creation/deletion of records
 - [x] **Self-Service Password Reset UI** - Token verification and reset password flow
