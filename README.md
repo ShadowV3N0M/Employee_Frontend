@@ -21,6 +21,7 @@ A modern React + Vite single-page application for the Employee Management system
   - **`admin`:** Full superuser capabilities — Excel Hub, salary raises/cuts, user account role promotion (`user` ➔ `manager` ➔ `admin`), account status toggling, and deactivation/restoration.
 - **Employee Directory:** Pagination (10 per page), column sorting (ID, Name, Dept, Salary), active/inactive filtering toggle, and CSV roster export.
 - **Excel & CSV Hub:** Modal for uploading `.xlsx` and `.csv` files for batch employee creation, sample CSV template download, and spreadsheet-driven bulk deletion.
+- **Interactive Employee Profile Modal (`EmployeeDetailModal.jsx`):** Clickable table rows and dedicated "View" action button. Displays role-tailored modal views: superuser full access for `admin`, management view for `manager`, and sanitized directory view with confidentiality notice for standard `user`.
 - **Salary Management:** Modal for setting exact salaries or applying raises/cuts with real-time validation and change tracking.
 - **Salary History Audit Log:** Modal displaying full timestamped salary revision records with previous salary, new salary, and who approved the change.
 - **Self-Service Password Reset:** Forgot-password request with token verification, real-time validation, and offline development fallback links.
@@ -93,6 +94,7 @@ employee_frontend/
     ├── components/
     │   ├── Layout.jsx         # Responsive top navigation bar with user profile
     │   ├── Modal.jsx          # Reusable accessible modal dialog
+    │   ├── EmployeeDetailModal.jsx # Role-based employee profile popup (admin/manager/user)
     │   ├── EmployeeForm.jsx   # Add/Edit employee modal with auto-email preview
     │   ├── SalaryModal.jsx    # Admin salary revision modal (set / increment)
     │   ├── HistoryModal.jsx   # Audit history table for salary adjustments
@@ -134,6 +136,15 @@ employee_frontend/
 ### 5. Automated Windows Launcher (`start.bat`)
 - Created a 1-click batch launcher that automatically checks dependencies, runs `npm install`, and starts the development server on `0.0.0.0:5173`.
 
+### 6. Interactive Role-Based Employee Detail Popup (`EmployeeDetailModal.jsx`)
+- **Interactive Row Click & Hover State:** All table rows now have pointer cursors and subtle `#f0f4ff` hover states. Clicking any employee row triggers an individual profile modal.
+- **Dedicated "View" Button:** Added a `View` action button in the table actions column for all users (including standard `user` accounts).
+- **Role-Based Data Separation:**
+  - **`admin`:** Comprehensive view containing profile header, initials avatar, department, status, formatted salary, home address, created/updated timestamps, and full action controls (`Deactivate/Restore`, `Salary Revision`, `Edit Profile`, `Salary History`).
+  - **`manager`:** Complete view with compensation, address, timestamps, plus `Edit Profile` and `Salary History` actions.
+  - **`user`:** Sanitized directory view (Name, Email, Department, Status) with an informative confidentiality notice informing that compensation and residential address are restricted to managers and administrators.
+- **Event Isolation:** Handled `e.stopPropagation()` on row action buttons to allow direct triggering of Edit/History/Salary modals without opening the detail modal.
+
 ---
 
 ## Roadmap & Features Status
@@ -141,6 +152,7 @@ employee_frontend/
 *(Fully synchronized with backend roadmap)*
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
+- [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls
 - [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk deletion
 - [x] **Self-Service Password Reset UI** - Token verification and reset password flow
 - [x] **Salary Management & Audit Log Modal** - Live salary revisions with change history
