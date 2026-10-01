@@ -153,7 +153,7 @@ employee_frontend/
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
 - [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls
-- [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk deletion
+- [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk creation/deletion of records
 - [x] **Self-Service Password Reset UI** - Token verification and reset password flow
 - [x] **Salary Management & Audit Log Modal** - Live salary revisions with change history
 - [x] **CSV Directory Export** - Dynamic export with role-based privacy masking
