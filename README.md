@@ -153,12 +153,21 @@ employee_frontend/
 - **Account Status Toggling:** Admins can quickly activate or deactivate accounts with immediate server synchronization.
 - **Real-Time Search & Filtering:** Instant filter bar to search users by username, email, or assigned role.
 
-### 8. Dark / Light Theme System & Theme Toggle (`theme.jsx`, `ThemeToggle.jsx`)
-- **Semantic CSS Custom Properties:** Configured full design token palettes for both light (`#f4f6fa` background, `#ffffff` surface) and dark mode (`#0b1120` deep slate background, `#1e293b` surface, high-contrast borders and text).
-- **Smooth Theme Transitions:** Added global CSS transitions on background, borders, and text colors.
-- **System Preference Detection:** Automatically adheres to OS-level `prefers-color-scheme: dark` by default with dynamic change listener.
-- **LocalStorage Persistence:** User selection (`light` or `dark`) is persisted in `localStorage` and synchronized with `document.documentElement[data-theme]` and `color-scheme`.
-- **Universal Availability:** The theme toggle is accessible directly on the navigation bar in `Layout.jsx` and on the pre-login `Login.jsx` screen.
+### 8. Dark / Light Theme System & Animated Celestial Switch (`theme.jsx`, `ThemeToggle.jsx`, `styles.css`)
+- **Interactive Celestial Toggle Switch:** Custom-designed pill track with animated sliding thumb, elastic bouncy spring physics (`cubic-bezier(0.34, 1.56, 0.64, 1)`), spinning golden sun with ray burst animation in light mode, and glowing crescent moon with twinkling sky stars in dark mode.
+- **Dynamic Text Slide Transition:** The "Light" / "Dark" label text glides smoothly with a micro-entrance animation upon theme change.
+- **Hardware-Accelerated Page Layout Transitions (View Transitions API):**
+  - Uses native `document.startViewTransition` with a dynamic circular clip-path expansion (`circle(0px) ➔ circle(endRadius)`) originating precisely from the button's click coordinates `(clientX, clientY)`.
+  - The new theme radiates smoothly across the entire page layout like an expanding ripple of light/darkness.
+- **Coordinated Universal Fallback:**
+  - For browsers without View Transitions, adds a `.theme-transitioning` class for 550ms that coordinates all CSS custom properties simultaneously and casts an ambient radial light sweep (`::after`) across the viewport.
+- **Accessibility & System Preferences:** Full support for OS-level `prefers-color-scheme: dark` and immediate fallback disabling for `prefers-reduced-motion: reduce`. User choices are saved in `localStorage`.
+
+### 9. 3D Card Flip Transition Animation (`Login.jsx`, `styles.css`)
+- **Perspective 3D Architecture:** Built a dynamic two-sided card wrapper (`.auth-flip-container` and `.auth-flip-card`) utilizing CSS 3D transforms (`perspective: 1200px`, `transform-style: preserve-3d`, `rotateY(180deg)`).
+- **Seamless Mode Switching:** Smooth 0.65s cubic-bezier flip animation when transitioning between **Sign In** (Front Face), **Account Registration** (Back Face), and **Password Reset** modes without abrupt page reloads or layout jumps.
+- **Accessibility & Focus Guarding:** Form inputs on the unfocused side are automatically disabled and removed from the keyboard tab sequence (`tabIndex={-1}`) to prevent accidental input while the card is rotated.
+- **Reduced Motion Fallback:** Respects user accessibility preferences via `@media (prefers-reduced-motion: reduce)`, smoothly disabling 3D rotation and providing instant display switching.
 
 ---
 
@@ -168,6 +177,7 @@ employee_frontend/
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
 - [x] **Dark / Light Theme Toggle** - Theme selector using CSS custom properties, persistent state & system media query
+- [x] **3D Card Flip Transition Animation** - Smooth 3D card flip between Login, Register, and Forgot Password with accessibility safeguards
 - [x] **Full Admin User CRUD** - Create user modal, role promotion, status toggling, and permanent deletion with self-delete protection
 - [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls
 - [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk creation/deletion of records
