@@ -88,11 +88,13 @@ employee_frontend/
     ├── main.jsx               # Entry point with BrowserRouter and AuthProvider
     ├── App.jsx                # Route definitions & RequireAuth route guards
     ├── auth.jsx               # Authentication context, session, and role helpers
+    ├── theme.jsx              # Theme context, state persistence & media listener
     ├── api.js                 # Centralized API service for all FastAPI endpoints
     ├── format.js              # Currency (INR) and date formatting utilities
-    ├── styles.css             # Global responsive styling and modal layout
+    ├── styles.css             # Global responsive styling and CSS custom properties (Light/Dark)
     ├── components/
-    │   ├── Layout.jsx         # Responsive top navigation bar with user profile
+    │   ├── Layout.jsx         # Responsive top navigation bar with user profile & theme toggle
+    │   ├── ThemeToggle.jsx    # Sleek Light / Dark mode toggle button
     │   ├── Modal.jsx          # Reusable accessible modal dialog
     │   ├── EmployeeDetailModal.jsx # Role-based employee profile popup (admin/manager/user)
     │   ├── EmployeeForm.jsx   # Add/Edit employee modal with auto-email preview
@@ -151,6 +153,13 @@ employee_frontend/
 - **Account Status Toggling:** Admins can quickly activate or deactivate accounts with immediate server synchronization.
 - **Real-Time Search & Filtering:** Instant filter bar to search users by username, email, or assigned role.
 
+### 8. Dark / Light Theme System & Theme Toggle (`theme.jsx`, `ThemeToggle.jsx`)
+- **Semantic CSS Custom Properties:** Configured full design token palettes for both light (`#f4f6fa` background, `#ffffff` surface) and dark mode (`#0b1120` deep slate background, `#1e293b` surface, high-contrast borders and text).
+- **Smooth Theme Transitions:** Added global CSS transitions on background, borders, and text colors.
+- **System Preference Detection:** Automatically adheres to OS-level `prefers-color-scheme: dark` by default with dynamic change listener.
+- **LocalStorage Persistence:** User selection (`light` or `dark`) is persisted in `localStorage` and synchronized with `document.documentElement[data-theme]` and `color-scheme`.
+- **Universal Availability:** The theme toggle is accessible directly on the navigation bar in `Layout.jsx` and on the pre-login `Login.jsx` screen.
+
 ---
 
 ## Roadmap & Features Status
@@ -158,6 +167,7 @@ employee_frontend/
 *(Fully synchronized with backend roadmap)*
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
+- [x] **Dark / Light Theme Toggle** - Theme selector using CSS custom properties, persistent state & system media query
 - [x] **Full Admin User CRUD** - Create user modal, role promotion, status toggling, and permanent deletion with self-delete protection
 - [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls
 - [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk creation/deletion of records
@@ -166,7 +176,6 @@ employee_frontend/
 - [x] **CSV Directory Export** - Dynamic export with role-based privacy masking
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
-- [ ] **Dark / Light Theme Toggle** - Theme selector using CSS custom properties
 - [ ] **Analytics Dashboard** - Visual charts for company payroll distribution, department headcounts, and budget utilization
 
 ---
