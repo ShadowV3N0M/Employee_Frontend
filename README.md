@@ -172,7 +172,26 @@ employee_frontend/
 ### 10. Rooster & Owl Waking-Up Mascot Animations (`ThemeMascot.jsx`, `styles.css`)
 - **Rooster Waking Up (Light Mode):** When switching to light theme, an animated rooster rises up with a sunrise glow, stretches its neck, fluffs wings, jiggles its comb, opens its beak to crow with floating musical notes (`♪`, `♫`, `☼`), and displays a *"Rise & Shine! ☀️"* speech bubble.
 - **Owl Waking Up (Dark Mode):** When switching to dark theme, a nocturnal owl perched on a moonlit branch slides up from sleep, blinks open glowing amber irises with dilating pupils, perks up its feathery ear tufts, gives an inquisitive head-tilt under twinkling stars (`★`, `✦`), and displays a *"Night Owl Mode! 🌙"* badge.
-- **Non-Intrusive & Accessible:** Mounted as a floating stage in the bottom-right corner with `pointer-events: none` to never block clicks, auto-dismissing after 2.8 seconds, and automatically disabled when `prefers-reduced-motion: reduce` is enabled.
+### 11. Multi-Field Table Filtration Across All Database Entities (`styles.css`, All Pages)
+- **Employee Table Filtration (`Employees.jsx`):**
+  - **Live Multi-Field Search:** 300ms debounced search matching employee name, email, or numeric ID.
+  - **Department Dropdown:** Instant filtering by company department.
+  - **Status Selector:** Toggle between Active Only, Inactive Only, or All records (restricted to `manager` and `admin` per RBAC).
+  - **Compensation Range:** Minimum and maximum salary inputs (privileged roles only).
+  - **Synchronized CSV Export:** The "Export CSV" button automatically applies active filter queries to download filtered results.
+- **Department Table Filtration (`Departments.jsx`):**
+  - Search by department name or numeric Dept ID.
+  - Filter by minimum and maximum department budget.
+- **User Account Filtration (`Users.jsx`):**
+  - Full-text search by username, email, or ID.
+  - Filter by assigned role (`user`, `manager`, `admin`).
+  - Filter by account status (`active`, `inactive`).
+- **Salary History Audit Filtration (`HistoryModal.jsx`):**
+  - Filter change logs by authorizing administrator username (`changed_by`).
+  - Filter by salary compensation range.
+- **Unified UI Filter Bar Component System:**
+  - Modern, responsive filter cards styled for Light and Dark themes.
+  - Active filter counters (`filter-badge-active`), filter chip tags with single-click removal (`filter-chip-remove`), and a master "Reset Filters" action.
 
 ---
 
@@ -189,7 +208,8 @@ employee_frontend/
 - [x] **Excel & CSV Hub** - Drag-and-drop batch importing and spreadsheet bulk creation/deletion of records
 - [x] **Self-Service Password Reset UI** - Token verification and reset password flow
 - [x] **Salary Management & Audit Log Modal** - Live salary revisions with change history
-- [x] **CSV Directory Export** - Dynamic export with role-based privacy masking
+- [x] **CSV Directory Export** - Dynamic export with role-based privacy masking and synchronized filter parameters
+- [x] **Multi-Field Table Filtration Across All Database Entities** - Full search, department, role, status, and compensation boundaries across Employee, Department, User, and Salary History tables with synchronized CSV export
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
 - [ ] **Analytics Dashboard** - Visual charts for company payroll distribution, department headcounts, and budget utilization
@@ -219,4 +239,4 @@ git push                      # Push to GitHub
 ```
 
 ---
-*Last updated: 2026-10-01 (In sync with backend v2.0)*
+*Last updated: 2026-10-03 (In sync with backend v2.0)*
