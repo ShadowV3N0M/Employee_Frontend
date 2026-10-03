@@ -100,12 +100,14 @@ employee_frontend/
     │   ├── EmployeeForm.jsx   # Add/Edit employee modal with auto-email preview
     │   ├── SalaryModal.jsx    # Admin salary revision modal (set / increment)
     │   ├── HistoryModal.jsx   # Audit history table for salary adjustments
-    │   └── ExcelImportModal.jsx # Excel/CSV batch import & bulk delete hub
+    │   ├── ExcelImportModal.jsx # Excel/CSV batch import & bulk delete hub
+    │   └── ChangePasswordModal.jsx # Modal to change account password from profile menu
     └── pages/
         ├── Login.jsx          # Login, Registration, and Forgot-Password request
         ├── ResetPassword.jsx  # Token verification and password reset screen
         ├── Employees.jsx      # Paginated directory table, filters, and actions
         ├── Departments.jsx    # Department listing, budget, and department creation
+        ├── Analytics.jsx      # Company-wide payroll KPIs, headcount, and budget utilization
         └── Users.jsx          # Admin user management and role promotion
 ```
 
@@ -193,6 +195,30 @@ employee_frontend/
   - Modern, responsive filter cards styled for Light and Dark themes.
   - Active filter counters (`filter-badge-active`), filter chip tags with single-click removal (`filter-chip-remove`), and a master "Reset Filters" action.
 
+### 11. Modern Menu Bar & Navigation System (`Layout.jsx`, `Analytics.jsx`, `ChangePasswordModal.jsx`)
+- **Modern Collapsible Left Sidebar:**
+  - Brand header with portal icon and collapse/expand toggle (`◀` / `▶`).
+  - Smooth animated width transition (250px expanded ➔ 72px collapsed).
+  - Collapsed state remembers user preference across refreshes via `localStorage` (`sidebar_collapsed`).
+  - Active route indicators with brand background pill highlighting.
+  - Icon-only mode with tooltips when collapsed.
+  - User footer brief with initials avatar and role badge.
+- **Responsive Mobile Drawer & Backdrop:**
+  - On screens < 900px, sidebar shifts to an off-canvas drawer (`transform: translateX(-100%)`).
+  - Topbar hamburger button (`☰`) toggles the drawer open with a dark blur backdrop overlay (`.sidebar-backdrop`).
+  - Automatically auto-closes the drawer when navigating to any route.
+- **User Profile & Account Dropdown Menu:**
+  - Clickable user menu trigger in topbar with gradient initials avatar, username, role pill, and animated arrow chevron.
+  - Dropdown card with user avatar, username, email address, role badge, and actions.
+  - **"🔑 Change Password" Action Modal (`ChangePasswordModal.jsx`):** Allows users to change their own password directly from the topbar with old password validation and password match checks.
+  - **"🚪 Sign Out" Action:** One-click session termination.
+  - Accessible click-outside listener and Escape key dismiss.
+- **Payroll & Analytics Dashboard (`Analytics.jsx`):**
+  - KPI metric cards: Total Payroll Expense, Active Staff Headcount, Average Compensation, and Minimum/Maximum Salary Range.
+  - Visual department budget utilization cards with percentage progress bars (color-coded for safe, warning ≥80%, and over-budget >100%).
+  - Detailed department compensation table with headcount, total payroll, average salary, and budget utilization.
+  - Route guarded with `<RequireAuth roles={["manager", "admin"]}>`.
+
 ---
 
 ## Roadmap & Features Status
@@ -210,9 +236,11 @@ employee_frontend/
 - [x] **Salary Management & Audit Log Modal** - Live salary revisions with change history
 - [x] **CSV Directory Export** - Dynamic export with role-based privacy masking and synchronized filter parameters
 - [x] **Multi-Field Table Filtration Across All Database Entities** - Full search, department, role, status, and compensation boundaries across Employee, Department, User, and Salary History tables with synchronized CSV export
+- [x] **Modern Collapsible Left Sidebar & Responsive Mobile Drawer** - Collapsible sidebar with localStorage persistence, mobile drawer overlay, and hamburger navigation
+- [x] **User Profile & Account Dropdown Menu** - Topbar account menu with avatar, role badge, "Change Password" modal, and sign out
+- [x] **Analytics & Payroll Dashboard** - Visual KPI cards, department budget utilization progress bars, and breakdown tables for managers & admins
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
-- [ ] **Analytics Dashboard** - Visual charts for company payroll distribution, department headcounts, and budget utilization
 
 ---
 
