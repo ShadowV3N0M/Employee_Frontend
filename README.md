@@ -101,7 +101,9 @@ employee_frontend/
     │   ├── SalaryModal.jsx    # Admin salary revision modal (set / increment)
     │   ├── HistoryModal.jsx   # Audit history table for salary adjustments
     │   ├── ExcelImportModal.jsx # Excel/CSV batch import & bulk delete hub
-    │   └── ChangePasswordModal.jsx # Modal to change account password from profile menu
+    │   ├── ChangePasswordModal.jsx # Modal to change account password from profile menu
+    │   ├── DepartmentEditModal.jsx # Admin department name & budget allocation editor
+    │   └── DepartmentHistoryModal.jsx # Department revision & budget change history table
     └── pages/
         ├── Login.jsx          # Login, Registration, and Forgot-Password request
         ├── ResetPassword.jsx  # Token verification and password reset screen
@@ -219,6 +221,21 @@ employee_frontend/
   - Detailed department compensation table with headcount, total payroll, average salary, and budget utilization.
   - Route guarded with `<RequireAuth roles={["manager", "admin"]}>`.
 
+### 12. Admin Department Management: Budget Editing, Audit History & Safe Deletion (`Departments.jsx`, `DepartmentEditModal.jsx`, `DepartmentHistoryModal.jsx`)
+- **Admin Department Editing (`DepartmentEditModal.jsx`):**
+  - Admins can edit department names and modify allocated budgets directly from the UI.
+  - Real-time preview of formatted currency as numbers are typed.
+  - Optional change reason / audit note logged to the department revision history.
+  - Strict input validation: non-empty name, non-negative budget.
+- **Department Revision & Budget History (`DepartmentHistoryModal.jsx`):**
+  - **Per-Department History:** Dedicated "History" button on each department row displaying timestamp, admin user, action badge (`Created`, `Budget Revised`, `Name Changed`, `Name & Budget`, `Deleted`), previous budget ➔ new budget with net difference `(+/-)`, and notes.
+  - **Global Company Audit Log:** Topbar "📜 Audit History" button provides an aggregated log of all department creations, name updates, budget revisions, and deletions across the organization.
+- **Safe Department Deletion:**
+  - Confirmation safety modal preventing accidental clicks.
+  - Foreign key integrity check: if any employees (active or inactive) are assigned to the department, deletion is blocked with a clear user notice: *"Cannot delete department 'X': Y employee(s) are assigned to it. Reassign or delete them first."*
+  - When empty, safely detaches historical records to preserve the audit trail and removes the department.
+- **RBAC Visibility:** Action buttons (`Edit`, `History`, `Delete`) and audit tools are restricted to `admin` role; standard users view directory tables only.
+
 ---
 
 ## Roadmap & Features Status
@@ -239,6 +256,7 @@ employee_frontend/
 - [x] **Modern Collapsible Left Sidebar & Responsive Mobile Drawer** - Collapsible sidebar with localStorage persistence, mobile drawer overlay, and hamburger navigation
 - [x] **User Profile & Account Dropdown Menu** - Topbar account menu with avatar, role badge, "Change Password" modal, and sign out
 - [x] **Analytics & Payroll Dashboard** - Visual KPI cards, department budget utilization progress bars, and breakdown tables for managers & admins
+- [x] **Admin Department Management & Budget Revision History** - Modal for editing department name and budget, audit history table, and safe deletion with employee assignment protection
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
 
