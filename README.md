@@ -110,7 +110,8 @@ employee_frontend/
         ├── Employees.jsx      # Paginated directory table, filters, and actions
         ├── Departments.jsx    # Department listing, budget, and department creation
         ├── Analytics.jsx      # Company-wide payroll KPIs, headcount, and budget utilization
-        └── Users.jsx          # Admin user management and role promotion
+        ├── Users.jsx          # Admin user management and role promotion
+        └── SalaryCalculator.jsx # Employee salary & in-hand take-home pay calculator with payslip preview
 ```
 
 ---
@@ -236,6 +237,25 @@ employee_frontend/
   - When empty, safely detaches historical records to preserve the audit trail and removes the department.
 - **RBAC Visibility:** Action buttons (`Edit`, `History`, `Delete`) and audit tools are restricted to `admin` role; standard users view directory tables only.
 
+### 13. Interactive Employee Salary & Take-Home Pay Calculator (`SalaryCalculator.jsx`)
+- **Self-Service Employee Access:** Open to all registered employee accounts (`user`, `manager`, `admin`). Prominently placed in the modern collapsible sidebar navigation and topbar user profile dropdown.
+- **"Load My Salary" Profile Sync:** One-click button querying `GET /employees/salary/my-profile` to automatically prefill the calculator with the authenticated employee's registered annual CTC from their employee record.
+- **Dual Tax Regime Engine (Indian Income Tax):**
+  - **New Tax Regime (FY 2024-25 / 2025-26):** ₹75,000 standard deduction, latest 6-tier slab brackets, Section 87A rebate for income up to ₹7,00,000, and 4% Health & Education cess.
+  - **Old Tax Regime:** ₹50,000 standard deduction, Section 80C deductions (up to ₹1.5L), Section 80D medical health deductions (up to ₹25k), and Section 87A rebate up to ₹5,00,000.
+  - **Side-by-Side Tax Comparison Banner:** Highlights which regime yields greater net in-hand earnings and displays the exact annual savings amount.
+- **Accurate Indian Statutory Deductions:**
+  - **EPF (12%):** With switchable statutory wage ceiling cap (₹1,800/month or ₹21,600/year) vs. uncapped 12% of basic pay.
+  - **Professional Tax (PT):** Standard ₹200/month (₹2,500/year with Feb adjustment).
+  - **Employee State Insurance (ESI):** 0.75% for Gross monthly pay ≤ ₹21,000 (auto-exempt above threshold).
+- **KPI Summary Cards & Dual Views:**
+  - Monthly Take-Home Pay, Annual Take-Home Pay, Gross Compensation, and Total Deductions cards.
+  - Toggle between Monthly and Annual breakdown tables.
+  - Quick presets: ₹3.6 LPA, ₹6.0 LPA, ₹9.0 LPA, ₹12.0 LPA, ₹18.0 LPA, ₹25.0 LPA, ₹35.0 LPA plus interactive continuous slider.
+- **Simulated Payslip Voucher Modal:**
+  - Interactive voucher popup showing company header ("StaffPortal Corp."), employee name, designation, pay period, itemized earnings and deductions, and net amount credited.
+  - Dedicated "🖨️ Print Payslip" action triggering clean native browser print styling.
+
 ---
 
 ## Roadmap & Features Status
@@ -257,6 +277,7 @@ employee_frontend/
 - [x] **User Profile & Account Dropdown Menu** - Topbar account menu with avatar, role badge, "Change Password" modal, and sign out
 - [x] **Analytics & Payroll Dashboard** - Visual KPI cards, department budget utilization progress bars, and breakdown tables for managers & admins
 - [x] **Admin Department Management & Budget Revision History** - Modal for editing department name and budget, audit history table, and safe deletion with employee assignment protection
+- [x] **Interactive Salary & Take-Home Pay Calculator** - Dual tax regime comparison (New vs. Old), statutory deductions (EPF, PT, ESI), "Load My Salary" profile integration, and printable payslip simulation preview
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
 
