@@ -252,6 +252,12 @@ employee_frontend/
   - Monthly Take-Home Pay, Annual Take-Home Pay, Gross Compensation, and Total Deductions cards.
   - Toggle between Monthly and Annual breakdown tables.
   - Quick presets: ₹3.6 LPA, ₹6.0 LPA, ₹9.0 LPA, ₹12.0 LPA, ₹18.0 LPA, ₹25.0 LPA, ₹35.0 LPA plus interactive continuous slider.
+- **Admin Full Employee Roster Inspector & Simulation Tools:**
+  - **All N Employee Records Access:** Removes arbitrary 200 record caps by leveraging `GET /employees?all_records=true&status=all` (`limit=0`). System administrators and managers can access, search, and calculate salary breakdowns for any number of company employees regardless of organization size.
+  - **Employee Selection Directory Modal:** Comprehensive modal with live search by Name, Email, or Emp ID, Department dropdown filtering, Status filtering (Active, Inactive, All), and high-performance client-side pagination (25, 50, 100, 250, All items per page).
+  - **Selected Employee Card & Appraisal Raise Simulation:** Pre-fills employee compensation and features 1-click scenario simulation buttons (`+5%`, `+10%`, `+15%`, `+20%`, and `Reset to Base`) with real-time what-if delta calculations.
+  - **Official Salary Commitment (`PUT /employees/{emp_id}/salary`):** Admins can commit simulated salary revisions directly back to the database with a 1-click confirmation modal and automated salary history audit logging.
+  - **Personalized Payslip Generation:** Generates individualized payslip simulations with the selected employee's actual name, ID, department, and email address.
 - **Simulated Payslip Voucher Modal:**
   - Interactive voucher popup showing company header ("StaffPortal Corp."), employee name, designation, pay period, itemized earnings and deductions, and net amount credited.
   - Dedicated "🖨️ Print Payslip" action triggering clean native browser print styling.
