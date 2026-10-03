@@ -169,6 +169,11 @@ employee_frontend/
 - **Accessibility & Focus Guarding:** Form inputs on the unfocused side are automatically disabled and removed from the keyboard tab sequence (`tabIndex={-1}`) to prevent accidental input while the card is rotated.
 - **Reduced Motion Fallback:** Respects user accessibility preferences via `@media (prefers-reduced-motion: reduce)`, smoothly disabling 3D rotation and providing instant display switching.
 
+### 10. Rooster & Owl Waking-Up Mascot Animations (`ThemeMascot.jsx`, `styles.css`)
+- **Rooster Waking Up (Light Mode):** When switching to light theme, an animated rooster rises up with a sunrise glow, stretches its neck, fluffs wings, jiggles its comb, opens its beak to crow with floating musical notes (`♪`, `♫`, `☼`), and displays a *"Rise & Shine! ☀️"* speech bubble.
+- **Owl Waking Up (Dark Mode):** When switching to dark theme, a nocturnal owl perched on a moonlit branch slides up from sleep, blinks open glowing amber irises with dilating pupils, perks up its feathery ear tufts, gives an inquisitive head-tilt under twinkling stars (`★`, `✦`), and displays a *"Night Owl Mode! 🌙"* badge.
+- **Non-Intrusive & Accessible:** Mounted as a floating stage in the bottom-right corner with `pointer-events: none` to never block clicks, auto-dismissing after 2.8 seconds, and automatically disabled when `prefers-reduced-motion: reduce` is enabled.
+
 ---
 
 ## Roadmap & Features Status
@@ -177,6 +182,7 @@ employee_frontend/
 
 - [x] **Role-Based UI & Access Guarding** - Strict view controls across `user`, `manager`, and `admin`
 - [x] **Dark / Light Theme Toggle** - Theme selector using CSS custom properties, persistent state & system media query
+- [x] **Rooster & Owl Waking-Up Mascots** - Animated sunrise rooster (light) and twilight owl (dark) with interactive stage choreography
 - [x] **3D Card Flip Transition Animation** - Smooth 3D card flip between Login, Register, and Forgot Password with accessibility safeguards
 - [x] **Full Admin User CRUD** - Create user modal, role promotion, status toggling, and permanent deletion with self-delete protection
 - [x] **Interactive Role-Based Employee Profile Popup** - Row-click modal with role-based field masking and dynamic action controls

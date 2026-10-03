@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import ThemeMascot from "./components/ThemeMascot";
 
 const ThemeContext = createContext({
   theme: "light",
@@ -19,6 +20,9 @@ export function ThemeProvider({ children }) {
     }
     return "light";
   });
+
+  // Mascot animation state: null | "rooster" (light) | "owl" (dark)
+  const [mascot, setMascot] = useState(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -48,6 +52,11 @@ export function ThemeProvider({ children }) {
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // Trigger rooster for daylight and owl for darkness
+    if (!prefersReducedMotion) {
+      setMascot(nextTheme === "dark" ? "owl" : "rooster");
+    }
+
     // Calculate origin coordinates from the click event or toggle button
     let x = window.innerWidth / 2;
     let y = 40;
@@ -66,7 +75,7 @@ export function ThemeProvider({ children }) {
     document.documentElement.style.setProperty("--theme-click-x", `${Math.round(x)}px`);
     document.documentElement.style.setProperty("--theme-click-y", `${Math.round(y)}px`);
 
-    // 1. Native View Transitions API (Chromium browsers, Safari 18+)
+    // 1. Native View Transitions API (Modern Chromium, Safari 18+)
     if (!prefersReducedMotion && typeof document.startViewTransition === "function") {
       const endRadius = Math.hypot(
         Math.max(x, window.innerWidth - x),
@@ -135,6 +144,7 @@ export function ThemeProvider({ children }) {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
+      <ThemeMascot active={mascot} onComplete={() => setMascot(null)} />
     </ThemeContext.Provider>
   );
 }
