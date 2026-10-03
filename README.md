@@ -103,7 +103,8 @@ employee_frontend/
     │   ├── ExcelImportModal.jsx # Excel/CSV batch import & bulk delete hub
     │   ├── ChangePasswordModal.jsx # Modal to change account password from profile menu
     │   ├── DepartmentEditModal.jsx # Admin department name & budget allocation editor
-    │   └── DepartmentHistoryModal.jsx # Department revision & budget change history table
+    │   ├── DepartmentHistoryModal.jsx # Department revision & budget change history table
+    │   └── SortByDropdown.jsx # Universal popover dropdown for field selection and direction toggle
     └── pages/
         ├── Login.jsx          # Login, Registration, and Forgot-Password request
         ├── ResetPassword.jsx  # Token verification and password reset screen
@@ -198,7 +199,7 @@ employee_frontend/
   - Modern, responsive filter cards styled for Light and Dark themes.
   - Active filter counters (`filter-badge-active`), filter chip tags with single-click removal (`filter-chip-remove`), and a master "Reset Filters" action.
 
-### 11. Modern Menu Bar & Navigation System (`Layout.jsx`, `Analytics.jsx`, `ChangePasswordModal.jsx`)
+### 12. Modern Menu Bar & Navigation System (`Layout.jsx`, `Analytics.jsx`, `ChangePasswordModal.jsx`)
 - **Modern Collapsible Left Sidebar:**
   - Brand header with portal icon and collapse/expand toggle (`◀` / `▶`).
   - Smooth animated width transition (250px expanded ➔ 72px collapsed).
@@ -222,7 +223,7 @@ employee_frontend/
   - Detailed department compensation table with headcount, total payroll, average salary, and budget utilization.
   - Route guarded with `<RequireAuth roles={["manager", "admin"]}>`.
 
-### 12. Admin Department Management: Budget Editing, Audit History & Safe Deletion (`Departments.jsx`, `DepartmentEditModal.jsx`, `DepartmentHistoryModal.jsx`)
+### 13. Admin Department Management: Budget Editing, Audit History & Safe Deletion (`Departments.jsx`, `DepartmentEditModal.jsx`, `DepartmentHistoryModal.jsx`)
 - **Admin Department Editing (`DepartmentEditModal.jsx`):**
   - Admins can edit department names and modify allocated budgets directly from the UI.
   - Real-time preview of formatted currency as numbers are typed.
@@ -237,7 +238,7 @@ employee_frontend/
   - When empty, safely detaches historical records to preserve the audit trail and removes the department.
 - **RBAC Visibility:** Action buttons (`Edit`, `History`, `Delete`) and audit tools are restricted to `admin` role; standard users view directory tables only.
 
-### 13. Interactive Employee Salary & Take-Home Pay Calculator (`SalaryCalculator.jsx`)
+### 14. Interactive Employee Salary & Take-Home Pay Calculator (`SalaryCalculator.jsx`)
 - **Self-Service Employee Access:** Open to all registered employee accounts (`user`, `manager`, `admin`). Prominently placed in the modern collapsible sidebar navigation and topbar user profile dropdown.
 - **"Load My Salary" Profile Sync:** One-click button querying `GET /employees/salary/my-profile` to automatically prefill the calculator with the authenticated employee's registered annual CTC from their employee record.
 - **Dual Tax Regime Engine (Indian Income Tax):**
@@ -262,7 +263,7 @@ employee_frontend/
   - Interactive voucher popup showing company header ("StaffPortal Corp."), employee name, designation, pay period, itemized earnings and deductions, and net amount credited.
   - Dedicated "🖨️ Print Payslip" action triggering clean native browser print styling.
 
-### 14. Comprehensive Admin Employee Details Editing (`EmployeeForm.jsx`, `EmployeeDetailModal.jsx`)
+### 15. Comprehensive Admin Employee Details Editing (`EmployeeForm.jsx`, `EmployeeDetailModal.jsx`)
 - **Full Administrative Edit Authority for Admins:**
   - Administrators have full editing privileges across all employee attributes:
     - **Name & Address:** First Name, Last Name, and Residential Address with validation.
@@ -276,6 +277,23 @@ employee_frontend/
   - Non-admin managers can safely update First Name, Last Name, Department, and Address, while protected attributes (Salary, Official Email, Joining Date, Account Status) are rendered as clean read-only informational cards.
 - **Enhanced Profile Inspection (`EmployeeDetailModal.jsx`):**
   - Displays Joining Date alongside Department, Status, and Email in the General Information section visible to directory users.
+
+### 16. Universal Sort By & Filter By Engine (`SortByDropdown.jsx`)
+- **Dedicated `Sort by` Popover Dropdown:**
+  - Standardized `⇅ Sort by: [Field] [▲/▼]` button on all pages with accessible popover dropdown, outside-click and Escape dismissal.
+  - Active checkmark indicators and quick Ascending (`▲ Asc (A-Z)`) / Descending (`▼ Desc (Z-A)`) direction toggles.
+  - Clickable table column headers (`<th>`) stay synchronized with directional indicators (`▲` / `▼`).
+- **Interactive `⚡ Filter By` Toggle Button:**
+  - Displays dynamic active filter badge counter pill (e.g. `⚡ Filter By (2)`).
+  - Toggles the multi-field filter card open/closed cleanly, persisting all active filter criteria.
+  - Reset filter action with active filter chips and matching record count indicators.
+- **Implemented Uniformly Across All Pages & Modals:**
+  - **Employees (`Employees.jsx`):** Sort by ID, First Name, Last Name, Department, Email, Joining Date, Account Status, and Salary (privileged). Filter by search, department, status, and salary bounds.
+  - **Departments (`Departments.jsx`):** Backend-synchronized sorting by Department ID, Name, and Budget. Filter by search query, min budget, max budget.
+  - **Users (`Users.jsx`):** Backend-synchronized sorting by User ID, Username, Email, Role, and Status. Filter by query, role, and active status.
+  - **Analytics (`Analytics.jsx`):** Real-time sorting on department breakdown table by Name, Headcount, Total Payroll, Average Compensation, Budget, and Utilization %. Filter by department search and budget health status.
+  - **Salary Calculator Roster (`SalaryCalculator.jsx`):** Full N-employee directory modal features dedicated Sort By dropdown, Filter By toggle, and clickable table headers for all company staff.
+  - **Audit History Modals (`HistoryModal.jsx` & `DepartmentHistoryModal.jsx`):** Multi-column sorting and filtering on salary revisions and department budget changes.
 
 ---
 
@@ -300,6 +318,7 @@ employee_frontend/
 - [x] **Admin Department Management & Budget Revision History** - Modal for editing department name and budget, audit history table, and safe deletion with employee assignment protection
 - [x] **Interactive Salary & Take-Home Pay Calculator** - Dual tax regime comparison (New vs. Old), statutory deductions (EPF, PT, ESI), "Load My Salary" profile integration, and printable payslip simulation preview
 - [x] **Full Admin Access to Edit All Employee Details** - Admin can modify First/Last Name, Department, Residential Address, Salary (with audit history), Official Email (with uniqueness check), Joining Date (with schema migration), and Account Status (active/inactive)
+- [x] **Universal Sort By & Filter By Engine Across Every Page & Modal** - Dedicated Sort By dropdown popover with direction toggles, clickable table headers, and Filter By button with active count pills across Employees, Departments, Users, Analytics, and Salary Calculator roster
 - [ ] **PDF Export of Reports** - UI buttons to export formatted employee rosters, department expense breakdowns, and salary audit logs to downloadable PDF files *(Backend PDF module in progress)*
 - [ ] **Attendance & Leave Management UI** - Clock-in/out widget, leave balance cards, and manager approval table *(Backend attendance module in progress)*
 
