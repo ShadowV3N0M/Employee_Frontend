@@ -926,6 +926,66 @@ input, select {
   transition: border-color 0.15s ease, background-color 0.2s ease, color 0.2s ease;
 }
 input:focus, select:focus { outline: 2px solid var(--focus-ring); border-color: var(--primary); }
+
+/* Password input with show/hide toggle */
+.password-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-wrap input {
+  width: 100%;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+  z-index: 2;
+  user-select: none;
+}
+
+.password-toggle-btn:hover:not(:disabled) {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.password-toggle-btn:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.password-toggle-btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  color: var(--primary);
+}
+
+.password-toggle-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.password-toggle-btn svg {
+  display: block;
+  pointer-events: none;
+}
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .span-2 { grid-column: span 2; }
 .stack { display: flex; flex-direction: column; gap: 14px; }
