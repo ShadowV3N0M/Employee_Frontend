@@ -140,6 +140,15 @@ export default function Layout() {
             <span className="sidebar-link-label">Salary Calculator</span>
           </NavLink>
 
+          <NavLink
+            to="/holidays"
+            className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+            title="Holiday Calendar & Company Announcements"
+          >
+            <span className="sidebar-link-icon">📅</span>
+            <span className="sidebar-link-label">Holidays & News</span>
+          </NavLink>
+
           {(user?.role === "manager" || user?.role === "admin") && (
             <NavLink
               to="/analytics"
@@ -234,6 +243,15 @@ export default function Layout() {
                       >
                         <span className="user-dropdown-item-icon">🧮</span>
                         <span>Salary Calculator</span>
+                      </NavLink>
+
+                      <NavLink
+                        to="/holidays"
+                        className="user-dropdown-item"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <span className="user-dropdown-item-icon">📅</span>
+                        <span>Holidays & News</span>
                       </NavLink>
 
                       <button

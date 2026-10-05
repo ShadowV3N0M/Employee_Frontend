@@ -25,6 +25,7 @@ A modern React + Vite single-page application for the Employee Management system
 - **Salary Management:** Modal for setting exact salaries or applying raises/cuts with real-time validation and change tracking.
 - **Salary History Audit Log:** Modal displaying full timestamped salary revision records with previous salary, new salary, and who approved the change.
 - **Self-Service Password Reset:** Forgot-password request with token verification, real-time validation, and offline development fallback links.
+- **Holiday Calendar, Announcements & Business Days Simulator (`Holidays.jsx`):** 3-tab corporate hub featuring annual holiday schedule with countdown timer and grid/table toggle, priority-tagged announcements bulletin board with department targeting and pinned notices, and working business days calculator deducting weekends and official holidays.
 
 ---
 
@@ -333,7 +334,7 @@ employee_frontend/
 - [ ] **Outgoing webhooks & third-party HRIS integrations** - Admin console to configure webhook endpoints, inspect event logs, and integrate with Slack/Teams
 - [ ] **Organization chart & reporting hierarchy** - Manager relationships, direct reports, and cycle-detection traversal
 - [ ] **Employee self-service profile & emergency contacts** - Self-service personal profile editing, primary/secondary emergency contacts, and blood group directory
-- [ ] **Holiday calendar & company announcements** - Annual company holiday schedule and corporate bulletin board feeding leave business-day calculations
+- [x] **Holiday calendar & company announcements** - Annual company holiday schedule, corporate bulletin board, and business-day calculation engine
 - [ ] **Statutory compliance exports** - Indian payroll statutory reporting (PF ECR text file, ESI monthly return, Form 16, and 24Q quarterly returns)
 - [ ] **Single Sign-On (SSO)** - Enterprise SSO integration via Google Workspace and Microsoft 365 (OAuth2 / OIDC)
 - [ ] **Fine-grained custom permission builder** - Granular role and permission matrix beyond fixed admin/manager/user tiers

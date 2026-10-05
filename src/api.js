@@ -279,4 +279,38 @@ export const api = {
     a.remove();
     setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
   },
+
+  // --- holidays & calendar ---
+  listHolidays: (params) => {
+    const clean = Object.fromEntries(
+      Object.entries(params || {}).filter(([_, v]) => v != null && v !== "")
+    );
+    const q = new URLSearchParams(clean).toString();
+    return request(`/holidays${q ? `?${q}` : ""}`);
+  },
+  upcomingHolidays: (limit = 5) => request(`/holidays/upcoming?limit=${limit}`),
+  calculateBusinessDays: (startDate, endDate) =>
+    request(
+      `/holidays/business-days?start_date=${encodeURIComponent(
+        startDate
+      )}&end_date=${encodeURIComponent(endDate)}`
+    ),
+  createHoliday: (body) => request("/holidays", { method: "POST", body }),
+  updateHoliday: (id, body) => request(`/holidays/${id}`, { method: "PUT", body }),
+  deleteHoliday: (id) => request(`/holidays/${id}`, { method: "DELETE" }),
+  seedDefaultHolidays: (year = 2026) =>
+    request(`/holidays/seed-defaults?year=${year}`, { method: "POST" }),
+
+  // --- announcements ---
+  listAnnouncements: (params) => {
+    const clean = Object.fromEntries(
+      Object.entries(params || {}).filter(([_, v]) => v != null && v !== "")
+    );
+    const q = new URLSearchParams(clean).toString();
+    return request(`/announcements${q ? `?${q}` : ""}`);
+  },
+  createAnnouncement: (body) => request("/announcements", { method: "POST", body }),
+  updateAnnouncement: (id, body) => request(`/announcements/${id}`, { method: "PUT", body }),
+  deleteAnnouncement: (id) => request(`/announcements/${id}`, { method: "DELETE" }),
 };
+
