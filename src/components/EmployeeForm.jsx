@@ -33,8 +33,26 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
 
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
+
+  async function handleDelete() {
+    if (!isAdmin || !editing) return;
+    setError("");
+    setBusy(true);
+    try {
+      const res = await api.deleteEmployee(employee.Emp_ID);
+      onSaved(
+        res.message ||
+          `Employee #${employee.Emp_ID} deleted and subsequent IDs updated successfully.`
+      );
+    } catch (err) {
+      setError(err.message || "Failed to delete employee.");
+      setBusy(false);
+      setShowDeleteConfirm(false);
+    }
+  }
 
   const handleAutoGenerateEmail = () => {
     const f = form.F_Name.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -332,13 +350,82 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
           </div>
         )}
 
-        <div className="actions span-2">
-          <button type="button" className="btn ghost" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn primary" disabled={busy}>
-            {busy ? "Saving…" : editing ? "Save changes" : "Create employee"}
-          </button>
+        {showDeleteConfirm && (
+          <div
+            className="alert error span-2"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              border: "1px solid var(--danger-border)",
+              marginTop: "8px",
+            }}
+          >
+            <div>
+              <strong style={{ fontSize: "0.95rem" }}>
+                Permanently Delete Employee #{employee.Emp_ID}?
+              </strong>
+              <p style={{ margin: "4px 0 0", fontSize: "0.85rem", lineHeight: 1.5 }}>
+                Are you sure you want to permanently delete <strong>{employee.F_Name} {employee.L_Name}</strong> and their salary history records?
+                <br />
+                <span style={{ color: "var(--text-heading)", fontWeight: 600 }}>
+                  ⚡ Auto-Resequencing: All subsequent employee IDs (&gt; #{employee.Emp_ID}) will automatically decrement by 1 so IDs remain consecutive without gaps.
+                </span>
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+              <button
+                type="button"
+                className="btn ghost small"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={busy}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn danger small"
+                onClick={handleDelete}
+                disabled={busy}
+              >
+                {busy ? "Deleting & Resequencing…" : "Confirm Permanent Delete"}
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div
+          className="span-2"
+          style={{
+            display: "flex",
+            justifyContent: isAdmin && editing ? "space-between" : "flex-end",
+            alignItems: "center",
+            marginTop: "12px",
+            paddingTop: "12px",
+            borderTop: "1px solid var(--border)",
+          }}
+        >
+          {isAdmin && editing ? (
+            <button
+              type="button"
+              className="btn danger"
+              onClick={() => setShowDeleteConfirm(true)}
+              disabled={busy || showDeleteConfirm}
+              style={{ fontSize: "0.85rem", padding: "8px 14px" }}
+              title="Permanently remove this employee and auto-update all subsequent IDs"
+            >
+              🗑️ Delete Employee
+            </button>
+          ) : <span />}
+
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button type="button" className="btn ghost" onClick={onClose} disabled={busy}>
+              Cancel
+            </button>
+            <button className="btn primary" disabled={busy || showDeleteConfirm}>
+              {busy ? "Saving…" : editing ? "Save changes" : "Create employee"}
+            </button>
+          </div>
         </div>
       </form>
     </Modal>
