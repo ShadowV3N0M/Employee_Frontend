@@ -534,7 +534,7 @@ The following modules represent the next-generation architectural enhancements p
 Push this frontend repository to GitHub with:
 
 ```powershell
-cd D:\Sagar\Python\employee_frontend
+cd  \ Your Program path 
 git init
 git add .
 git commit -m "feat: initial commit for React 19 + Vite frontend"
