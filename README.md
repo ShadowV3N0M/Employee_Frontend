@@ -27,6 +27,7 @@ A modern React + Vite single-page application for the Employee Management system
 - **Self-Service Password Reset:** Forgot-password request with token verification, real-time validation, and offline development fallback links.
 - **Holiday Calendar, Announcements & Business Days Simulator (`Holidays.jsx`):** 3-tab corporate hub featuring annual holiday schedule with countdown timer and grid/table toggle, priority-tagged announcements bulletin board with department targeting and pinned notices, and working business days calculator deducting weekends and official holidays.
 - **Real-Time Push Notifications & Live Bell (`NotificationBell.jsx`, `NotificationContext.jsx`):** Full-duplex WebSocket connection, ringing bell animation, unread badge counter, synthesized HTML5 Web Audio chime, floating real-time toast alerts, notification inbox with category filters, and Manager/Admin instant broadcast modal.
+- **Employee Self-Service Profile & Emergency Contacts (`Profile.jsx`, `EmployeeDetailModal.jsx`):** Authenticated personal profile portal allowing staff to manage personal phone, blood group with medical badge, date of birth with live age calculator, marital status, and residential address; interactive Emergency Contacts & SOS directory with primary contact hero spotlight, 1-click click-to-call links, and copy-number shortcuts; integrated SOS view in Employee Detail Modal for managers and HR admins.
 
 ---
 
@@ -334,7 +335,7 @@ employee_frontend/
 - [ ] **Automated database backup & disaster recovery** - Admin-only snapshot management console, manual dump trigger, and safe restore interface
 - [ ] **Outgoing webhooks & third-party HRIS integrations** - Admin console to configure webhook endpoints, inspect event logs, and integrate with Slack/Teams
 - [ ] **Organization chart & reporting hierarchy** - Manager relationships, direct reports, and cycle-detection traversal
-- [ ] **Employee self-service profile & emergency contacts** - Self-service personal profile editing, primary/secondary emergency contacts, and blood group directory
+- [x] **Employee self-service profile & emergency contacts** - Self-service personal profile editing, primary/secondary emergency contacts, and blood group directory
 - [x] **Holiday calendar & company announcements** - Annual company holiday schedule, corporate bulletin board, and business-day calculation engine
 - [ ] **Statutory compliance exports** - Indian payroll statutory reporting (PF ECR text file, ESI monthly return, Form 16, and 24Q quarterly returns)
 - [ ] **Single Sign-On (SSO)** - Enterprise SSO integration via Google Workspace and Microsoft 365 (OAuth2 / OIDC)

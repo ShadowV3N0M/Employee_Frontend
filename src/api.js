@@ -322,5 +322,17 @@ export const api = {
   deleteNotification: (id) => request(`/notifications/${id}`, { method: "DELETE" }),
   clearAllReadNotifications: () => request("/notifications/clear-all", { method: "DELETE" }),
   broadcastNotification: (body) => request("/notifications/broadcast", { method: "POST", body }),
+
+  // --- employee self-service profile & emergency contacts ---
+  getMyProfile: () => request("/employees/me/profile"),
+  updateMyProfile: (body) => request("/employees/me/profile", { method: "PUT", body }),
+  listMyEmergencyContacts: () => request("/employees/me/emergency-contacts"),
+  addMyEmergencyContact: (body) => request("/employees/me/emergency-contacts", { method: "POST", body }),
+  updateMyEmergencyContact: (id, body) => request(`/employees/me/emergency-contacts/${id}`, { method: "PUT", body }),
+  deleteMyEmergencyContact: (id) => request(`/employees/me/emergency-contacts/${id}`, { method: "DELETE" }),
+  getEmployeeEmergencyContacts: (empId) => request(`/employees/${empId}/emergency-contacts`),
+  addEmployeeEmergencyContact: (empId, body) => request(`/employees/${empId}/emergency-contacts`, { method: "POST", body }),
+  deleteEmployeeEmergencyContact: (empId, contactId) => request(`/employees/${empId}/emergency-contacts/${contactId}`, { method: "DELETE" }),
+  linkUserToEmployee: (body) => request("/employees/link-user", { method: "POST", body }),
 };
 

@@ -9,6 +9,7 @@ import Analytics from "./pages/Analytics";
 import Users from "./pages/Users";
 import SalaryCalculator from "./pages/SalaryCalculator";
 import Holidays from "./pages/Holidays";
+import Profile from "./pages/Profile";
 import { NotificationProvider } from "./context/NotificationContext";
 
 // Guards a route: must be logged in, and (optionally) have one of `roles`.
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/departments" element={<Departments />} />
         <Route path="/salary-calculator" element={<SalaryCalculator />} />
         <Route path="/holidays" element={<Holidays />} />
+        <Route path="/profile" element={<Profile />} />
         <Route
           path="/analytics"
           element={
