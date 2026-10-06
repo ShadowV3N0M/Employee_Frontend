@@ -1,6 +1,6 @@
 // All communication with the FastAPI backend goes through this file.
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 const TOKEN_KEY = "emp_token";
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
@@ -312,5 +312,15 @@ export const api = {
   createAnnouncement: (body) => request("/announcements", { method: "POST", body }),
   updateAnnouncement: (id, body) => request(`/announcements/${id}`, { method: "PUT", body }),
   deleteAnnouncement: (id) => request(`/announcements/${id}`, { method: "DELETE" }),
+  
+  // --- notifications & real-time alerts ---
+  listNotifications: (unreadOnly = false, limit = 50) =>
+    request(`/notifications?unread_only=${unreadOnly}&limit=${limit}`),
+  getUnreadNotificationCount: () => request("/notifications/unread-count"),
+  markNotificationRead: (id) => request(`/notifications/${id}/read`, { method: "PATCH" }),
+  markAllNotificationsRead: () => request("/notifications/mark-all-read", { method: "PATCH" }),
+  deleteNotification: (id) => request(`/notifications/${id}`, { method: "DELETE" }),
+  clearAllReadNotifications: () => request("/notifications/clear-all", { method: "DELETE" }),
+  broadcastNotification: (body) => request("/notifications/broadcast", { method: "POST", body }),
 };
 

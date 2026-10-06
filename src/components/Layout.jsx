@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../auth";
 import ThemeToggle from "./ThemeToggle";
 import ChangePasswordModal from "./ChangePasswordModal";
+import NotificationBell from "./NotificationBell";
 
 function getInitials(name) {
   if (!name) return "U";
@@ -203,6 +204,7 @@ export default function Layout() {
 
             <div className="topbar-right">
               <ThemeToggle />
+              <NotificationBell />
 
               {/* User Profile Dropdown Menu */}
               <div className="user-menu-container" ref={userMenuRef}>

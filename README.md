@@ -26,6 +26,7 @@ A modern React + Vite single-page application for the Employee Management system
 - **Salary History Audit Log:** Modal displaying full timestamped salary revision records with previous salary, new salary, and who approved the change.
 - **Self-Service Password Reset:** Forgot-password request with token verification, real-time validation, and offline development fallback links.
 - **Holiday Calendar, Announcements & Business Days Simulator (`Holidays.jsx`):** 3-tab corporate hub featuring annual holiday schedule with countdown timer and grid/table toggle, priority-tagged announcements bulletin board with department targeting and pinned notices, and working business days calculator deducting weekends and official holidays.
+- **Real-Time Push Notifications & Live Bell (`NotificationBell.jsx`, `NotificationContext.jsx`):** Full-duplex WebSocket connection, ringing bell animation, unread badge counter, synthesized HTML5 Web Audio chime, floating real-time toast alerts, notification inbox with category filters, and Manager/Admin instant broadcast modal.
 
 ---
 
@@ -327,7 +328,7 @@ employee_frontend/
 - [ ] **Leave & time-off management system** - Leave balance cards, multi-day application modal, holiday exclusion, and manager review hub
 - [ ] **Performance appraisal & review management** - Evaluation cycles, metric scorecards, and appraisal-driven salary increment integrations
 - [ ] **Multi-factor authentication (MFA/2FA) & session manager** - TOTP authenticator QR setup wizard, 6-digit confirmation, and active session manager
-- [ ] **Real-time push notifications & announcements (WebSockets)** - Live topbar notification bell, unread badge counter, audio chime, and corporate bulletin board
+- [x] **Real-time push notifications & announcements (WebSockets)** - Live topbar notification bell, unread badge counter, audio chime, and corporate bulletin board
 - [ ] **Employee document & KYC storage vault** - Tabbed document uploader in EmployeeDetailModal, drag-and-drop file upload, and PDF/image previewer
 - [ ] **Global command palette (`Ctrl+K` / `Cmd+K`)** - Spotlight-style instant navigation, quick employee search, and keyboard shortcut hub
 - [ ] **Automated database backup & disaster recovery** - Admin-only snapshot management console, manual dump trigger, and safe restore interface

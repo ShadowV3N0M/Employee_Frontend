@@ -9,6 +9,7 @@ import Analytics from "./pages/Analytics";
 import Users from "./pages/Users";
 import SalaryCalculator from "./pages/SalaryCalculator";
 import Holidays from "./pages/Holidays";
+import { NotificationProvider } from "./context/NotificationContext";
 
 // Guards a route: must be logged in, and (optionally) have one of `roles`.
 function RequireAuth({ roles, children }) {
@@ -30,7 +31,9 @@ export default function App() {
       <Route
         element={
           <RequireAuth>
-            <Layout />
+            <NotificationProvider>
+              <Layout />
+            </NotificationProvider>
           </RequireAuth>
         }
       >
