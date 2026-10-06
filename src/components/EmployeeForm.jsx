@@ -29,6 +29,10 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
     Address: employee?.Address ?? "",
     joining_date: initialJoiningDate(),
     is_active: employee?.is_active ?? true,
+    personal_phone: employee?.personal_phone ?? "",
+    blood_group: employee?.blood_group ?? "",
+    dob: employee?.dob ? String(employee.dob).slice(0, 10) : "",
+    marital_status: employee?.marital_status ?? "",
   });
 
   const [error, setError] = useState("");
@@ -113,6 +117,10 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
         if (form.Email.trim()) {
           payload.Email = form.Email.trim().toLowerCase();
         }
+        if (form.personal_phone.trim()) payload.personal_phone = form.personal_phone.trim();
+        if (form.blood_group.trim()) payload.blood_group = form.blood_group.trim().toUpperCase();
+        if (form.dob) payload.dob = form.dob;
+        if (form.marital_status.trim()) payload.marital_status = form.marital_status.trim();
 
         const res = await api.createEmployee(payload);
         onSaved(`Created ${res.employee.F_Name} ${res.employee.L_Name} — email ${res.employee.Email}`);
@@ -130,6 +138,21 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
         }
         if (form.Address.trim() !== (employee.Address || "")) {
           changes.Address = form.Address.trim();
+        }
+
+        // Personal details updates
+        if (form.personal_phone.trim() !== (employee.personal_phone || "")) {
+          changes.personal_phone = form.personal_phone.trim() || null;
+        }
+        if (form.blood_group.trim() !== (employee.blood_group || "")) {
+          changes.blood_group = form.blood_group.trim().toUpperCase() || null;
+        }
+        const origDob = employee.dob ? String(employee.dob).slice(0, 10) : "";
+        if (form.dob !== origDob) {
+          changes.dob = form.dob || null;
+        }
+        if (form.marital_status !== (employee.marital_status || "")) {
+          changes.marital_status = form.marital_status || null;
         }
 
         // Admin-only updates
@@ -349,6 +372,59 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
             )}
           </div>
         )}
+
+        {/* Personal Details Section */}
+        <div className="span-2" style={{ borderTop: "1px solid var(--border)", paddingTop: "12px", marginTop: "4px" }}>
+          <h4 style={{ margin: "0 0 10px 0", fontSize: "0.82rem", textTransform: "uppercase", color: "var(--muted)", letterSpacing: "0.05em" }}>
+            Personal Information (Self-Service Profile)
+          </h4>
+        </div>
+
+        <label>
+          Personal Mobile Phone
+          <input
+            type="tel"
+            value={form.personal_phone}
+            onChange={set("personal_phone")}
+            placeholder="+91 98765 43210"
+            maxLength={20}
+          />
+        </label>
+
+        <label>
+          Blood Group
+          <select value={form.blood_group} onChange={set("blood_group")}>
+            <option value="">Select blood group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+        </label>
+
+        <label>
+          Date of Birth
+          <input
+            type="date"
+            value={form.dob}
+            onChange={set("dob")}
+          />
+        </label>
+
+        <label>
+          Marital Status
+          <select value={form.marital_status} onChange={set("marital_status")}>
+            <option value="">Select marital status</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Widowed">Widowed</option>
+          </select>
+        </label>
 
         {showDeleteConfirm && (
           <div
