@@ -215,6 +215,56 @@ export const api = {
     return data;
   },
 
+  bulkActivateEmployeesExcel: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = getToken();
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    let res;
+    try {
+      res = await fetch(`${BASE_URL}/employees/bulk-activate-excel`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+    } catch {
+      throw new ApiError("Cannot reach the server. Is the API running?", 0);
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new ApiError(errorMessage(data, `Bulk activation failed (${res.status})`), res.status);
+    }
+    return data;
+  },
+
+  bulkDeactivateEmployeesExcel: async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const token = getToken();
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    let res;
+    try {
+      res = await fetch(`${BASE_URL}/employees/bulk-deactivate-excel`, {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+    } catch {
+      throw new ApiError("Cannot reach the server. Is the API running?", 0);
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new ApiError(errorMessage(data, `Bulk deactivation failed (${res.status})`), res.status);
+    }
+    return data;
+  },
+
   bulkDeleteEmployeesExcel: async (file, hard_delete = false) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -240,7 +290,7 @@ export const api = {
     return data;
   },
 
-  downloadEmployeeTemplate: () => `${BASE_URL}/employees/template`,
+  downloadEmployeeTemplate: (type = "full") => `${BASE_URL}/employees/template?template_type=${type}`,
   exportEmployeesUrl: (params = {}) => {
     if (typeof params === "boolean") {
       params = { include_inactive: params };

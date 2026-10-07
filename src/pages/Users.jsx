@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import Modal from "../components/Modal";
+import ExcelImportModal from "../components/ExcelImportModal";
 import SortByDropdown from "../components/SortByDropdown";
 
 const ROLES = ["user", "manager", "admin"];
@@ -27,6 +28,7 @@ export default function Users() {
 
   // Add User modal state
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showExcelModal, setShowExcelModal] = useState(false);
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -230,6 +232,9 @@ export default function Users() {
             }}
           />
 
+          <button className="btn secondary" onClick={() => setShowExcelModal(true)}>
+            📊 Excel Hub
+          </button>
           <button className="btn primary" onClick={() => setShowAddModal(true)}>
             + Add User
           </button>
@@ -524,6 +529,16 @@ export default function Users() {
             </div>
           </form>
         </Modal>
+      )}
+
+      {showExcelModal && (
+        <ExcelImportModal
+          onClose={() => setShowExcelModal(false)}
+          onSuccess={(msg) => {
+            setNotice(msg);
+            load();
+          }}
+        />
       )}
     </>
   );
