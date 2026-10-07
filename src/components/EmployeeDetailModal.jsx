@@ -330,6 +330,38 @@ export default function EmployeeDetailModal({
                 <button
                   type="button"
                   className="btn small ghost"
+                  title="Download official monthly payslip voucher (PDF)"
+                  onClick={async () => {
+                    try {
+                      const url = api.getPayslipPdfUrl(emp.Emp_ID, { inline: false });
+                      await api.downloadPdf(url, `Payslip_${emp.Emp_ID}_${emp.F_Name}.pdf`);
+                    } catch (err) {
+                      alert(err.message || "Failed to download payslip PDF");
+                    }
+                  }}
+                >
+                  🧾 Payslip (PDF)
+                </button>
+
+                <button
+                  type="button"
+                  className="btn small ghost"
+                  title="Download salary revision notice & compensation audit letter (PDF)"
+                  onClick={async () => {
+                    try {
+                      const url = api.getSalaryRevisionPdfUrl(emp.Emp_ID, { inline: false });
+                      await api.downloadPdf(url, `Salary_Revision_${emp.Emp_ID}_${emp.F_Name}.pdf`);
+                    } catch (err) {
+                      alert(err.message || "Failed to download revision letter PDF");
+                    }
+                  }}
+                >
+                  📄 Revision Letter (PDF)
+                </button>
+
+                <button
+                  type="button"
+                  className="btn small ghost"
                   onClick={() => {
                     onClose();
                     onHistory(emp);

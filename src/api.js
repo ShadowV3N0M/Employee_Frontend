@@ -334,5 +334,76 @@ export const api = {
   addEmployeeEmergencyContact: (empId, body) => request(`/employees/${empId}/emergency-contacts`, { method: "POST", body }),
   deleteEmployeeEmergencyContact: (empId, contactId) => request(`/employees/${empId}/emergency-contacts/${contactId}`, { method: "DELETE" }),
   linkUserToEmployee: (body) => request("/employees/link-user", { method: "POST", body }),
+
+  // --- official reports & PDF exports ---
+  downloadPdf: async (path, filename) => {
+    const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
+    return api.downloadBlob(url, filename);
+  },
+
+  previewPdf: async (path) => {
+    const url = path.startsWith("http") ? path : `${BASE_URL}${path}`;
+    const token = getToken();
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    let res;
+    try {
+      res = await fetch(url, { headers });
+    } catch {
+      throw new ApiError("Cannot reach the server. Is the API running?", 0);
+    }
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new ApiError(errorMessage(data, `Failed to load PDF (${res.status})`), res.status);
+    }
+
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    window.open(blobUrl, "_blank");
+    setTimeout(() => window.URL.revokeObjectURL(blobUrl), 30000);
+  },
+
+  getPayslipPdfUrl: (empId, { month, year, regime = "new", isMetro = false, inline = true } = {}) => {
+    const params = new URLSearchParams();
+    if (month) params.set("month", month);
+    if (year) params.set("year", year);
+    if (regime) params.set("regime", regime);
+    if (isMetro) params.set("is_metro", "true");
+    params.set("inline", String(inline));
+    return `/reports/payslip/${empId}/pdf?${params.toString()}`;
+  },
+
+  getMyPayslipPdfUrl: ({ month, year, regime = "new", isMetro = false, inline = true } = {}) => {
+    const params = new URLSearchParams();
+    if (month) params.set("month", month);
+    if (year) params.set("year", year);
+    if (regime) params.set("regime", regime);
+    if (isMetro) params.set("is_metro", "true");
+    params.set("inline", String(inline));
+    return `/reports/my-payslip/pdf?${params.toString()}`;
+  },
+
+  getEmployeesPdfUrl: ({ deptId, status = "all", search, inline = true } = {}) => {
+    const params = new URLSearchParams();
+    if (deptId) params.set("dept_id", deptId);
+    if (status) params.set("status", status);
+    if (search) params.set("search", search);
+    params.set("inline", String(inline));
+    return `/reports/employees/pdf?${params.toString()}`;
+  },
+
+  getDepartmentsPdfUrl: ({ inline = true } = {}) => {
+    return `/reports/departments/pdf?inline=${String(inline)}`;
+  },
+
+  getSalaryRevisionPdfUrl: (empId, { inline = true } = {}) => {
+    return `/reports/salary-revisions/${empId}/pdf?inline=${String(inline)}`;
+  },
+
+  getMySalaryRevisionPdfUrl: ({ inline = true } = {}) => {
+    return `/reports/my-salary-revision/pdf?inline=${String(inline)}`;
+  },
 };
 

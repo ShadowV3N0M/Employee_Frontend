@@ -265,6 +265,29 @@ export default function Employees() {
           >
             📤 Export CSV
           </a>
+
+          <button
+            type="button"
+            className="btn ghost"
+            style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+            title="Export currently filtered employees as formal PDF report"
+            onClick={async () => {
+              try {
+                const pdfUrl = api.getEmployeesPdfUrl({
+                  deptId: filters.dept_id ? Number(filters.dept_id) : undefined,
+                  status: filters.status || (includeInactive ? "all" : "active"),
+                  search: filters.search || undefined,
+                  inline: false,
+                });
+                await api.downloadPdf(pdfUrl, `Employee_Directory_${new Date().toISOString().slice(0, 10)}.pdf`);
+                setNotice("Employee Directory PDF report downloaded successfully.");
+              } catch (err) {
+                setError(err.message || "Failed to download PDF report.");
+              }
+            }}
+          >
+            📑 Export PDF
+          </button>
         </div>
       </div>
 

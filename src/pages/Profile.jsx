@@ -335,30 +335,70 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Tab Toggle Bar */}
+        {/* Tab Toggle Bar & PDF Actions */}
         <div
           style={{
             display: "flex",
-            gap: "8px",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
             marginTop: "20px",
             borderTop: "1px solid var(--border)",
             paddingTop: "16px",
           }}
         >
-          <button
-            type="button"
-            className={`btn ${activeTab === "personal" ? "btn-primary" : "btn-secondary"}`}
-            onClick={() => setActiveTab("personal")}
-          >
-            👤 Personal Details & Address
-          </button>
-          <button
-            type="button"
-            className={`btn ${activeTab === "emergency" ? "btn-primary" : "btn-secondary"}`}
-            onClick={() => setActiveTab("emergency")}
-          >
-            🚨 Emergency Contacts & SOS ({profile.emergency_contacts?.length || 0})
-          </button>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className={`btn ${activeTab === "personal" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setActiveTab("personal")}
+            >
+              👤 Personal Details & Address
+            </button>
+            <button
+              type="button"
+              className={`btn ${activeTab === "emergency" ? "btn-primary" : "btn-secondary"}`}
+              onClick={() => setActiveTab("emergency")}
+            >
+              🚨 Emergency Contacts & SOS ({profile.emergency_contacts?.length || 0})
+            </button>
+          </div>
+
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="btn ghost small"
+              title="Download your official monthly payslip voucher (PDF)"
+              onClick={async () => {
+                try {
+                  const url = api.getMyPayslipPdfUrl({ inline: false });
+                  await api.downloadPdf(url, `My_Payslip_${profile.Emp_ID}.pdf`);
+                  setSuccess("Downloaded official payslip voucher PDF successfully.");
+                } catch (err) {
+                  setError(err.message || "Failed to download payslip PDF");
+                }
+              }}
+            >
+              🧾 My Payslip (PDF)
+            </button>
+            <button
+              type="button"
+              className="btn ghost small"
+              title="Download your formal salary revision & compensation letter (PDF)"
+              onClick={async () => {
+                try {
+                  const url = api.getMySalaryRevisionPdfUrl({ inline: false });
+                  await api.downloadPdf(url, `My_Salary_Revision_${profile.Emp_ID}.pdf`);
+                  setSuccess("Downloaded compensation statement PDF successfully.");
+                } catch (err) {
+                  setError(err.message || "Failed to download compensation letter PDF");
+                }
+              }}
+            >
+              📄 Compensation Letter (PDF)
+            </button>
+          </div>
         </div>
       </div>
 

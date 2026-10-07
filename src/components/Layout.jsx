@@ -159,6 +159,15 @@ export default function Layout() {
             <span className="sidebar-link-label">My Profile</span>
           </NavLink>
 
+          <NavLink
+            to="/reports"
+            className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+            title="Official Reports & PDF Generator"
+          >
+            <span className="sidebar-link-icon">📑</span>
+            <span className="sidebar-link-label">Official Reports</span>
+          </NavLink>
+
           {(user?.role === "manager" || user?.role === "admin") && (
             <NavLink
               to="/analytics"
@@ -272,6 +281,15 @@ export default function Layout() {
                       >
                         <span className="user-dropdown-item-icon">📅</span>
                         <span>Holidays & News</span>
+                      </NavLink>
+
+                      <NavLink
+                        to="/reports"
+                        className="user-dropdown-item"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <span className="user-dropdown-item-icon">📑</span>
+                        <span>Official Reports</span>
                       </NavLink>
 
                       <button

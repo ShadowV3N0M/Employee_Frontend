@@ -182,6 +182,25 @@ export default function Departments() {
             }}
           />
 
+          {(isAdmin || user?.role === "manager") && (
+            <button
+              type="button"
+              className="btn ghost"
+              onClick={async () => {
+                try {
+                  const url = api.getDepartmentsPdfUrl({ inline: false });
+                  await api.downloadPdf(url, `Department_Budget_Statement_${new Date().toISOString().slice(0, 10)}.pdf`);
+                  setNotice("Department Budget Statement PDF downloaded successfully.");
+                } catch (err) {
+                  setError(err.message || "Failed to download budget statement PDF.");
+                }
+              }}
+              title="Download formal department budget utilization report (PDF)"
+            >
+              📑 Budget PDF Report
+            </button>
+          )}
+
           {isAdmin && (
             <button
               type="button"

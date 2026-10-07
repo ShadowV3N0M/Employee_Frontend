@@ -1763,9 +1763,26 @@ export default function SalaryCalculator() {
               tax & payroll guidelines.
             </p>
 
-            <div className="actions" style={{ marginTop: "14px" }}>
+            <div className="actions" style={{ marginTop: "14px", display: "flex", gap: "8px", justifyContent: "flex-end" }}>
               <button type="button" className="btn ghost" onClick={() => window.print()}>
-                🖨️ Print Payslip
+                🖨️ Print HTML
+              </button>
+              <button
+                type="button"
+                className="btn secondary"
+                onClick={async () => {
+                  try {
+                    const empId = selectedEmployee?.Emp_ID;
+                    const url = empId
+                      ? api.getPayslipPdfUrl(empId, { regime, isMetro, inline: false })
+                      : api.getMyPayslipPdfUrl({ regime, isMetro, inline: false });
+                    await api.downloadPdf(url, `Official_Payslip_${empId || "Self"}.pdf`);
+                  } catch (err) {
+                    alert(err.message || "Failed to download official PDF payslip");
+                  }
+                }}
+              >
+                📑 Download Official PDF
               </button>
               <button type="button" className="btn primary" onClick={() => setShowPayslip(false)}>
                 Done
