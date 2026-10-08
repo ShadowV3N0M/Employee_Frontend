@@ -48,7 +48,7 @@ export default function App() {
         <Route
           path="/analytics"
           element={
-            <RequireAuth roles={["manager", "admin"]}>
+            <RequireAuth>
               <Analytics />
             </RequireAuth>
           }

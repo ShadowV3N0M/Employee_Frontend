@@ -168,16 +168,14 @@ export default function Layout() {
             <span className="sidebar-link-label">Official Reports</span>
           </NavLink>
 
-          {(user?.role === "manager" || user?.role === "admin") && (
-            <NavLink
-              to="/analytics"
-              className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
-              title="Payroll & Company Analytics"
-            >
-              <span className="sidebar-link-icon">📊</span>
-              <span className="sidebar-link-label">Analytics</span>
-            </NavLink>
-          )}
+          <NavLink
+            to="/analytics"
+            className={({ isActive }) => `sidebar-link ${isActive ? "active" : ""}`}
+            title="Workforce & Organizational Analytics"
+          >
+            <span className="sidebar-link-icon">📊</span>
+            <span className="sidebar-link-label">Analytics</span>
+          </NavLink>
 
           {user?.role === "admin" && (
             <NavLink
