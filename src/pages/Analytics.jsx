@@ -30,6 +30,7 @@ export default function Analytics() {
   const [sortBy, setSortBy] = useState("dept_id");
   const [order, setOrder] = useState("asc");
   const [showFilters, setShowFilters] = useState(true);
+  const [barChartMode, setBarChartMode] = useState("top8"); // "top8" | "all" | "utilization"
 
   const loadData = () => {
     setLoading(true);
@@ -170,6 +171,36 @@ export default function Analytics() {
         };
       });
   }, [data?.departments, data?.summary?.active_headcount]);
+
+  const barChartDepartments = useMemo(() => {
+    if (!data?.departments) return [];
+    const list = [...data.departments];
+    if (barChartMode === "utilization") {
+      return list
+        .filter((d) => d.budget_utilization_pct != null)
+        .sort((a, b) => (b.budget_utilization_pct || 0) - (a.budget_utilization_pct || 0));
+    }
+    if (barChartMode === "top8") {
+      return list
+        .sort((a, b) => (b.total_payroll || 0) - (a.total_payroll || 0))
+        .slice(0, 8);
+    }
+    return list.sort((a, b) => (b.total_payroll || 0) - (a.total_payroll || 0));
+  }, [data?.departments, barChartMode]);
+
+  const maxFinancialValue = useMemo(() => {
+    if (!barChartDepartments.length) return 1;
+    return Math.max(
+      ...barChartDepartments.map((d) => Math.max(d.total_payroll || 0, d.budget || 0, 1))
+    );
+  }, [barChartDepartments]);
+
+  function getBudgetStatusColor(status) {
+    if (status === "over" || status === "danger") return "#e03131";
+    if (status === "warning") return "#f59f00";
+    if (status === "safe" || status === "ok") return "#2b8a3e";
+    return "#868e96";
+  }
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -716,6 +747,220 @@ export default function Analytics() {
                 </div>
               </div>
 
+              {/* Department Budget vs. Payroll Expense Bar Graph */}
+              <div className="card" style={{ padding: "20px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "16px" }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: "16px", color: "var(--text-heading)", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span>📊</span> Department Budget vs. Payroll Expense Bar Graph
+                    </h3>
+                    <p style={{ margin: "4px 0 0", fontSize: "12px", color: "var(--muted)" }}>
+                      Side-by-side comparative bar chart analyzing allocated operating budgets against active payroll expense.
+                    </p>
+                  </div>
+
+                  {/* Controls & Legend */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
+                    {/* Legend */}
+                    <div style={{ display: "flex", gap: "12px", fontSize: "12px", alignItems: "center" }}>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <span style={{ width: "10px", height: "10px", background: "#3b82f6", borderRadius: "2px" }} />
+                        <span>Payroll</span>
+                      </span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <span style={{ width: "10px", height: "10px", background: "#10b981", borderRadius: "2px" }} />
+                        <span>Budget (Healthy)</span>
+                      </span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "5px" }}>
+                        <span style={{ width: "10px", height: "10px", background: "#ef4444", borderRadius: "2px" }} />
+                        <span>Budget (Over)</span>
+                      </span>
+                    </div>
+
+                    {/* Mode Buttons */}
+                    <div style={{ display: "inline-flex", background: "var(--surface-alt)", padding: "2px", borderRadius: "6px", border: "1px solid var(--border)" }}>
+                      <button
+                        type="button"
+                        className="btn small"
+                        style={{
+                          background: barChartMode === "top8" ? "var(--primary)" : "transparent",
+                          color: barChartMode === "top8" ? "#fff" : "var(--text)",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "4px 8px",
+                          fontSize: "11px",
+                          margin: 0,
+                        }}
+                        onClick={() => setBarChartMode("top8")}
+                      >
+                        Top 8 by Payroll
+                      </button>
+                      <button
+                        type="button"
+                        className="btn small"
+                        style={{
+                          background: barChartMode === "all" ? "var(--primary)" : "transparent",
+                          color: barChartMode === "all" ? "#fff" : "var(--text)",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "4px 8px",
+                          fontSize: "11px",
+                          margin: 0,
+                        }}
+                        onClick={() => setBarChartMode("all")}
+                      >
+                        All ({data.departments.length})
+                      </button>
+                      <button
+                        type="button"
+                        className="btn small"
+                        style={{
+                          background: barChartMode === "utilization" ? "var(--primary)" : "transparent",
+                          color: barChartMode === "utilization" ? "#fff" : "var(--text)",
+                          border: "none",
+                          borderRadius: "4px",
+                          padding: "4px 8px",
+                          fontSize: "11px",
+                          margin: 0,
+                        }}
+                        onClick={() => setBarChartMode("utilization")}
+                      >
+                        Utilization %
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Visual Bars Container */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                    maxHeight: barChartMode === "all" ? "600px" : "none",
+                    overflowY: barChartMode === "all" ? "auto" : "visible",
+                    paddingRight: barChartMode === "all" ? "8px" : 0,
+                  }}
+                >
+                  {barChartDepartments.map((dept) => {
+                    const payrollPct = maxFinancialValue > 0 ? ((dept.total_payroll || 0) / maxFinancialValue) * 100 : 0;
+                    const budgetPct = maxFinancialValue > 0 && dept.budget ? ((dept.budget || 0) / maxFinancialValue) * 100 : 0;
+                    const isOver = dept.budget_status === "over";
+                    const statusColor = getBudgetStatusColor(dept.budget_status);
+
+                    if (barChartMode === "utilization") {
+                      return (
+                        <div key={dept.dept_id} style={{ display: "flex", flexDirection: "column", gap: "5px", padding: "8px 12px", background: "rgba(255, 255, 255, 0.02)", borderRadius: "8px", border: "1px solid var(--border)" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <strong style={{ color: "var(--text-heading)" }}>{dept.dept_name}</strong>
+                              <span className="muted" style={{ fontSize: "11px" }}>({dept.headcount} staff)</span>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                              <span className="muted" style={{ fontSize: "11px" }}>
+                                Payroll: {formatMoney(dept.total_payroll)} / Budget: {dept.budget != null ? formatMoney(dept.budget) : "—"}
+                              </span>
+                              <span className={`badge ${dept.budget_status === "over" ? "danger" : dept.budget_status === "warning" ? "warning" : "ok"}`} style={{ fontSize: "11px" }}>
+                                {dept.budget_utilization_pct}% {dept.budget_status === "over" ? "Over" : dept.budget_status === "warning" ? "Caution" : "Healthy"}
+                              </span>
+                            </div>
+                          </div>
+                          <div style={{ width: "100%", height: "10px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "999px", overflow: "hidden" }}>
+                            <div
+                              style={{
+                                width: `${Math.min(dept.budget_utilization_pct || 0, 100)}%`,
+                                height: "100%",
+                                background: statusColor,
+                                borderRadius: "999px",
+                                transition: "width 0.4s ease",
+                              }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div
+                        key={dept.dept_id}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "6px",
+                          background: "rgba(255, 255, 255, 0.02)",
+                          padding: "10px 12px",
+                          borderRadius: "8px",
+                          border: "1px solid var(--border)",
+                        }}
+                      >
+                        {/* Header */}
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <strong style={{ color: "var(--text-heading)" }}>{dept.dept_name}</strong>
+                            <span className="muted" style={{ fontSize: "11px" }}>#{dept.dept_id} · {dept.headcount} staff</span>
+                          </div>
+                          {dept.budget != null && (
+                            <span className={`badge ${isOver ? "danger" : dept.budget_status === "warning" ? "warning" : "ok"}`} style={{ fontSize: "11px" }}>
+                              {dept.budget_utilization_pct}% {isOver ? "Over Budget" : dept.budget_status === "warning" ? "Near Budget" : "Healthy Budget"}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Bar 1: Payroll Expense */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "11px" }}>
+                          <span style={{ width: "55px", color: "#60a5fa", fontWeight: "600", flexShrink: 0 }}>
+                            Payroll
+                          </span>
+                          <div style={{ flex: 1, height: "12px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "4px", overflow: "hidden" }}>
+                            <div
+                              style={{
+                                width: `${Math.max(payrollPct, 2)}%`,
+                                height: "100%",
+                                background: "linear-gradient(90deg, #3b82f6, #60a5fa)",
+                                borderRadius: "4px",
+                                transition: "width 0.4s ease",
+                              }}
+                            />
+                          </div>
+                          <strong style={{ width: "135px", textAlign: "right", color: "var(--text-heading)", fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+                            {formatMoney(dept.total_payroll)}
+                          </strong>
+                        </div>
+
+                        {/* Bar 2: Budget Allocation */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "11px" }}>
+                          <span style={{ width: "55px", color: isOver ? "#f87171" : "#34d399", fontWeight: "600", flexShrink: 0 }}>
+                            Budget
+                          </span>
+                          <div style={{ flex: 1, height: "12px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "4px", overflow: "hidden" }}>
+                            {dept.budget != null ? (
+                              <div
+                                style={{
+                                  width: `${Math.max(budgetPct, 2)}%`,
+                                  height: "100%",
+                                  background: isOver
+                                    ? "linear-gradient(90deg, #ef4444, #f87171)"
+                                    : "linear-gradient(90deg, #10b981, #34d399)",
+                                  borderRadius: "4px",
+                                  transition: "width 0.4s ease",
+                                }}
+                              />
+                            ) : (
+                              <div style={{ height: "100%", display: "flex", alignItems: "center", paddingLeft: "6px", color: "var(--muted)", fontSize: "10px" }}>
+                                Unbudgeted unit
+                              </div>
+                            )}
+                          </div>
+                          <strong style={{ width: "135px", textAlign: "right", color: dept.budget != null ? "var(--text-heading)" : "var(--muted)", fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+                            {dept.budget != null ? formatMoney(dept.budget) : "—"}
+                          </strong>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Department Budget Utilization Cards Grid */}
               <div>
                 <h3 style={{ margin: "0 0 12px 0", fontSize: "16px", color: "var(--text-heading)" }}>
@@ -756,11 +1001,25 @@ export default function Analytics() {
                         </div>
 
                         {dept.budget != null && (
-                          <div style={{ margin: "10px 0" }}>
-                            <div className="progress-bar-track">
+                          <div style={{ margin: "12px 0 10px 0" }}>
+                            <div
+                              className="progress-bar-track"
+                              style={{
+                                height: "8px",
+                                background: "rgba(255, 255, 255, 0.08)",
+                                borderRadius: "999px",
+                                overflow: "hidden",
+                              }}
+                            >
                               <div
                                 className={`progress-bar-fill progress-bar-${statusClass}`}
-                                style={{ width: `${Math.min(pct || 0, 100)}%` }}
+                                style={{
+                                  width: `${Math.min(pct || 0, 100)}%`,
+                                  background: getBudgetStatusColor(dept.budget_status || statusClass),
+                                  height: "100%",
+                                  borderRadius: "999px",
+                                  transition: "width 0.4s ease",
+                                }}
                               />
                             </div>
                           </div>
@@ -901,10 +1160,24 @@ export default function Analytics() {
                               <td>
                                 {pct != null ? (
                                   <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                                    <div className="progress-bar-track" style={{ flex: 1, height: "6px" }}>
+                                    <div
+                                      className="progress-bar-track"
+                                      style={{
+                                        flex: 1,
+                                        height: "6px",
+                                        background: "rgba(255, 255, 255, 0.08)",
+                                        borderRadius: "999px",
+                                        overflow: "hidden",
+                                      }}
+                                    >
                                       <div
                                         className={`progress-bar-fill progress-bar-${statusClass}`}
-                                        style={{ width: `${Math.min(pct, 100)}%` }}
+                                        style={{
+                                          width: `${Math.min(pct, 100)}%`,
+                                          background: getBudgetStatusColor(dept.budget_status || statusClass),
+                                          height: "100%",
+                                          borderRadius: "999px",
+                                        }}
                                       />
                                     </div>
                                     <span style={{ fontSize: "11px", fontWeight: "600", minWidth: "35px" }}>

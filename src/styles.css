@@ -784,6 +784,23 @@ code { background: var(--code-bg); color: var(--text); padding: 1px 5px; border-
   height: 100%;
   border-radius: 999px;
   transition: width 0.4s ease;
+  background: var(--primary, #3b5bdb);
+}
+
+.progress-bar-fill.progress-bar-ok {
+  background: var(--ok, #2b8a3e) !important;
+}
+
+.progress-bar-fill.progress-bar-warning {
+  background: #f59f00 !important;
+}
+
+.progress-bar-fill.progress-bar-danger {
+  background: var(--danger, #e03131) !important;
+}
+
+.progress-bar-fill.progress-bar-muted {
+  background: var(--muted, #868e96) !important;
 }
 
 /* ---------- Responsive Mobile Drawer Overlay ---------- */
