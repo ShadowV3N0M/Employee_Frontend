@@ -127,6 +127,19 @@ export default function EmployeeDetailModal({
               <span style={{ color: "var(--primary)", wordBreak: "break-all" }}>{emp.Email || "—"}</span>
             </div>
             <div>
+              <span className="muted small" style={{ display: "block" }}>Phone Number</span>
+              {emp.personal_phone ? (
+                <a
+                  href={`tel:${emp.personal_phone}`}
+                  style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}
+                >
+                  📞 {emp.personal_phone}
+                </a>
+              ) : (
+                <strong>—</strong>
+              )}
+            </div>
+            <div>
               <span className="muted small" style={{ display: "block" }}>Department</span>
               <strong>{deptName}</strong>
             </div>
@@ -176,11 +189,6 @@ export default function EmployeeDetailModal({
               <div style={{ gridColumn: "span 2" }}>
                 <span className="muted small" style={{ display: "block" }}>Residential Address</span>
                 <span>{emp.Address || "—"}</span>
-              </div>
-
-              <div>
-                <span className="muted small" style={{ display: "block" }}>Personal Mobile Phone</span>
-                <strong>{emp.personal_phone ? <a href={`tel:${emp.personal_phone}`} style={{ color: "var(--primary)" }}>📞 {emp.personal_phone}</a> : "—"}</strong>
               </div>
 
               <div>
