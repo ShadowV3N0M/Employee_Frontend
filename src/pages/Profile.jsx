@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import { formatMoney } from "../format";
+import PhoneInput from "../components/PhoneInput";
+import { formatFullPhone, parsePhoneNumber } from "../phoneUtils";
 
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const RELATIONSHIPS = ["Spouse", "Parent", "Sibling", "Child", "Friend", "Guardian", "Other"];
@@ -37,7 +39,9 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("personal"); // "personal" | "emergency"
 
   // Personal form state
-  const [personalPhone, setPersonalPhone] = useState("");
+  const [phoneCountryCode, setPhoneCountryCode] = useState("+91");
+  const [customCountryCode, setCustomCountryCode] = useState("");
+  const [phoneDigits, setPhoneDigits] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
   const [dob, setDob] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
@@ -69,7 +73,10 @@ export default function Profile() {
     try {
       const data = await api.getMyProfile();
       setProfile(data);
-      setPersonalPhone(data.personal_phone || "");
+      const parsed = parsePhoneNumber(data.personal_phone);
+      setPhoneCountryCode(parsed.code);
+      setCustomCountryCode(parsed.customCode);
+      setPhoneDigits(parsed.digits);
       setBloodGroup(data.blood_group || "");
       setDob(data.dob || "");
       setMaritalStatus(data.marital_status || "");
@@ -95,9 +102,23 @@ export default function Profile() {
     setPersonalMsg("");
     setPersonalError("");
 
+    if (phoneDigits) {
+      if (phoneDigits.length !== 10) {
+        setPersonalError(`Mobile number must be exactly 10 digits (currently ${phoneDigits.length} digits).`);
+        setSavingPersonal(false);
+        return;
+      }
+      if (phoneCountryCode === "custom" && (!customCountryCode || !customCountryCode.startsWith("+") || customCountryCode.length < 2)) {
+        setPersonalError("Please enter a valid custom country code starting with '+' (e.g. +353).");
+        setSavingPersonal(false);
+        return;
+      }
+    }
+
     try {
+      const formattedPhone = formatFullPhone(phoneCountryCode, customCountryCode, phoneDigits);
       const payload = {
-        personal_phone: personalPhone.trim() || null,
+        personal_phone: formattedPhone,
         blood_group: bloodGroup || null,
         dob: dob || null,
         marital_status: maritalStatus || null,
@@ -419,12 +440,14 @@ export default function Profile() {
 
             <form onSubmit={handleSavePersonal} className="form-grid">
               <div className="form-group">
-                <label>Personal Mobile Phone</label>
-                <input
-                  type="text"
-                  placeholder="e.g. +91 98765 43210"
-                  value={personalPhone}
-                  onChange={(e) => setPersonalPhone(e.target.value)}
+                <PhoneInput
+                  countryCode={phoneCountryCode}
+                  setCountryCode={setPhoneCountryCode}
+                  customCode={customCountryCode}
+                  setCustomCode={setCustomCountryCode}
+                  digits={phoneDigits}
+                  setDigits={setPhoneDigits}
+                  label="Personal Mobile Phone"
                 />
               </div>
 

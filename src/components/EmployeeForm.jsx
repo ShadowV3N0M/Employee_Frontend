@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { api } from "../api";
 import Modal from "./Modal";
+import PhoneInput from "./PhoneInput";
 import { formatMoney } from "../format";
+import { formatFullPhone, parsePhoneNumber } from "../phoneUtils";
 
 // Used for both "Add employee" (employee = null) and "Edit employee".
 export default function EmployeeForm({ employee, departments, role, onClose, onSaved }) {
@@ -19,6 +21,11 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
     return new Date().toISOString().slice(0, 10);
   };
 
+  const initialPhone = parsePhoneNumber(employee?.personal_phone);
+  const [phoneCountryCode, setPhoneCountryCode] = useState(initialPhone.code);
+  const [customCountryCode, setCustomCountryCode] = useState(initialPhone.customCode);
+  const [phoneDigits, setPhoneDigits] = useState(initialPhone.digits);
+
   const [form, setForm] = useState({
     Emp_ID: employee?.Emp_ID ?? "",
     F_Name: employee?.F_Name ?? "",
@@ -29,7 +36,6 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
     Address: employee?.Address ?? "",
     joining_date: initialJoiningDate(),
     is_active: employee?.is_active ?? true,
-    personal_phone: employee?.personal_phone ?? "",
     blood_group: employee?.blood_group ?? "",
     dob: employee?.dob ? String(employee.dob).slice(0, 10) : "",
     marital_status: employee?.marital_status ?? "",
@@ -102,6 +108,18 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
       }
     }
 
+    // Validate phone number if digits are entered
+    if (phoneDigits) {
+      if (phoneDigits.length !== 10) {
+        return setError(`Mobile number must be exactly 10 digits (currently ${phoneDigits.length} digits).`);
+      }
+      if (phoneCountryCode === "custom" && (!customCountryCode || !customCountryCode.startsWith("+") || customCountryCode.length < 2)) {
+        return setError("Please enter a valid custom country code starting with '+' (e.g. +353).");
+      }
+    }
+
+    const formattedPhone = formatFullPhone(phoneCountryCode, customCountryCode, phoneDigits);
+
     setBusy(true);
     try {
       if (!editing) {
@@ -117,7 +135,7 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
         if (form.Email.trim()) {
           payload.Email = form.Email.trim().toLowerCase();
         }
-        if (form.personal_phone.trim()) payload.personal_phone = form.personal_phone.trim();
+        if (formattedPhone) payload.personal_phone = formattedPhone;
         if (form.blood_group.trim()) payload.blood_group = form.blood_group.trim().toUpperCase();
         if (form.dob) payload.dob = form.dob;
         if (form.marital_status.trim()) payload.marital_status = form.marital_status.trim();
@@ -141,8 +159,9 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
         }
 
         // Personal details updates
-        if (form.personal_phone.trim() !== (employee.personal_phone || "")) {
-          changes.personal_phone = form.personal_phone.trim() || null;
+        const origPhone = employee?.personal_phone ? employee.personal_phone.trim() : "";
+        if ((formattedPhone || "") !== origPhone) {
+          changes.personal_phone = formattedPhone;
         }
         if (form.blood_group.trim() !== (employee.blood_group || "")) {
           changes.blood_group = form.blood_group.trim().toUpperCase() || null;
@@ -380,16 +399,15 @@ export default function EmployeeForm({ employee, departments, role, onClose, onS
           </h4>
         </div>
 
-        <label>
-          Personal Mobile Phone
-          <input
-            type="tel"
-            value={form.personal_phone}
-            onChange={set("personal_phone")}
-            placeholder="+91 98765 43210"
-            maxLength={20}
-          />
-        </label>
+        <PhoneInput
+          countryCode={phoneCountryCode}
+          setCountryCode={setPhoneCountryCode}
+          customCode={customCountryCode}
+          setCustomCode={setCustomCountryCode}
+          digits={phoneDigits}
+          setDigits={setPhoneDigits}
+          label="Personal Mobile Phone"
+        />
 
         <label>
           Blood Group
