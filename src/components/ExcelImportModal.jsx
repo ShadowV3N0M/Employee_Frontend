@@ -429,7 +429,7 @@ export default function ExcelImportModal({ onClose, onSuccess }) {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))",
                 gap: "10px",
                 margin: "4px 0",
               }}

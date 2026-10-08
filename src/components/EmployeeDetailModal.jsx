@@ -105,10 +105,7 @@ export default function EmployeeDetailModal({
           <h4 style={{ margin: "0 0 10px 0", fontSize: "0.82rem", textTransform: "uppercase", color: "var(--muted)", letterSpacing: "0.05em" }}>
             General Information
           </h4>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "12px",
+          <div className="responsive-grid-2" style={{
             background: "var(--surface)",
             border: "1px solid var(--border)",
             borderRadius: "8px",
@@ -165,10 +162,7 @@ export default function EmployeeDetailModal({
               </h4>
             </div>
 
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "12px",
+            <div className="responsive-grid-2" style={{
               background: "var(--surface)",
               border: "1px solid var(--border)",
               borderRadius: "8px",
@@ -186,7 +180,7 @@ export default function EmployeeDetailModal({
                 <strong>{emp.is_active ? "Active" : "Inactive / Deactivated"}</strong>
               </div>
 
-              <div style={{ gridColumn: "span 2" }}>
+              <div className="span-2">
                 <span className="muted small" style={{ display: "block" }}>Residential Address</span>
                 <span>{emp.Address || "—"}</span>
               </div>

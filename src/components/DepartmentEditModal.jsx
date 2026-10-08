@@ -76,7 +76,8 @@ export default function DepartmentEditModal({ department, onClose, onSaved }) {
             borderRadius: "8px",
             border: "1px solid var(--border)",
             display: "flex",
-            gap: "24px",
+            flexWrap: "wrap",
+            gap: "16px",
             fontSize: "0.88rem",
           }}
         >

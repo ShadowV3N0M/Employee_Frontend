@@ -341,7 +341,7 @@ export default function Analytics() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
                   gap: "20px",
                 }}
               >
@@ -498,7 +498,7 @@ export default function Analytics() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(90px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(min(90px, 100%), 1fr))",
                     gap: "10px",
                     marginTop: "8px",
                   }}
@@ -550,7 +550,7 @@ export default function Analytics() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(min(130px, 100%), 1fr))",
                       gap: "12px",
                     }}
                   >
@@ -851,12 +851,12 @@ export default function Analytics() {
                     if (barChartMode === "utilization") {
                       return (
                         <div key={dept.dept_id} style={{ display: "flex", flexDirection: "column", gap: "5px", padding: "8px 12px", background: "rgba(255, 255, 255, 0.02)", borderRadius: "8px", border: "1px solid var(--border)" }}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", flexWrap: "wrap", gap: "6px" }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                               <strong style={{ color: "var(--text-heading)" }}>{dept.dept_name}</strong>
                               <span className="muted" style={{ fontSize: "11px" }}>({dept.headcount} staff)</span>
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                               <span className="muted" style={{ fontSize: "11px" }}>
                                 Payroll: {formatMoney(dept.total_payroll)} / Budget: {dept.budget != null ? formatMoney(dept.budget) : "—"}
                               </span>
@@ -894,7 +894,7 @@ export default function Analytics() {
                         }}
                       >
                         {/* Header */}
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "13px", flexWrap: "wrap", gap: "6px" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                             <strong style={{ color: "var(--text-heading)" }}>{dept.dept_name}</strong>
                             <span className="muted" style={{ fontSize: "11px" }}>#{dept.dept_id} · {dept.headcount} staff</span>
@@ -907,11 +907,11 @@ export default function Analytics() {
                         </div>
 
                         {/* Bar 1: Payroll Expense */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "11px" }}>
-                          <span style={{ width: "55px", color: "#60a5fa", fontWeight: "600", flexShrink: 0 }}>
+                        <div className="analytics-bar-row">
+                          <span className="analytics-bar-label" style={{ color: "#60a5fa" }}>
                             Payroll
                           </span>
-                          <div style={{ flex: 1, height: "12px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "4px", overflow: "hidden" }}>
+                          <div className="analytics-bar-track">
                             <div
                               style={{
                                 width: `${Math.max(payrollPct, 2)}%`,
@@ -922,17 +922,17 @@ export default function Analytics() {
                               }}
                             />
                           </div>
-                          <strong style={{ width: "135px", textAlign: "right", color: "var(--text-heading)", fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+                          <strong className="analytics-bar-value" style={{ color: "var(--text-heading)" }}>
                             {formatMoney(dept.total_payroll)}
                           </strong>
                         </div>
 
                         {/* Bar 2: Budget Allocation */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "11px" }}>
-                          <span style={{ width: "55px", color: isOver ? "#f87171" : "#34d399", fontWeight: "600", flexShrink: 0 }}>
+                        <div className="analytics-bar-row">
+                          <span className="analytics-bar-label" style={{ color: isOver ? "#f87171" : "#34d399" }}>
                             Budget
                           </span>
-                          <div style={{ flex: 1, height: "12px", background: "rgba(255, 255, 255, 0.08)", borderRadius: "4px", overflow: "hidden" }}>
+                          <div className="analytics-bar-track">
                             {dept.budget != null ? (
                               <div
                                 style={{
@@ -951,7 +951,7 @@ export default function Analytics() {
                               </div>
                             )}
                           </div>
-                          <strong style={{ width: "135px", textAlign: "right", color: dept.budget != null ? "var(--text-heading)" : "var(--muted)", fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+                          <strong className="analytics-bar-value" style={{ color: dept.budget != null ? "var(--text-heading)" : "var(--muted)" }}>
                             {dept.budget != null ? formatMoney(dept.budget) : "—"}
                           </strong>
                         </div>

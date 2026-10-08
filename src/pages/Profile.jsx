@@ -425,7 +425,7 @@ export default function Profile() {
 
       {/* Tab 1: Personal Details */}
       {activeTab === "personal" && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))", gap: "20px" }}>
           {/* Editable Personal Form */}
           <div className="card" style={{ padding: "24px" }}>
             <h3 style={{ margin: "0 0 4px", fontSize: "1.15rem" }}>
@@ -687,7 +687,7 @@ export default function Profile() {
                 Secondary Emergency Contacts ({secondaryContacts.length})
               </h4>
 
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "14px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(280px, 100%), 1fr))", gap: "14px" }}>
                 {secondaryContacts.map((c) => (
                   <div
                     key={c.id}

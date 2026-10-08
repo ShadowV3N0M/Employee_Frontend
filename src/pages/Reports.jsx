@@ -350,7 +350,7 @@ export default function Reports() {
             </span>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginTop: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: "16px", marginTop: "16px" }}>
             {/* Employee Selector */}
             {isPrivileged ? (
               <label>
@@ -470,7 +470,7 @@ export default function Reports() {
             </span>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginTop: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))", gap: "16px", marginTop: "16px" }}>
             {/* Department Filter */}
             <label>
               <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>Filter by Department</span>
@@ -563,7 +563,7 @@ export default function Reports() {
             borderRadius: "8px",
             border: "1px solid var(--border)",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(160px, 100%), 1fr))",
             gap: "14px",
           }}>
             <div>
@@ -625,7 +625,7 @@ export default function Reports() {
             </span>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px", marginTop: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: "16px", marginTop: "16px" }}>
             {isPrivileged ? (
               <label>
                 <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>Select Employee</span>

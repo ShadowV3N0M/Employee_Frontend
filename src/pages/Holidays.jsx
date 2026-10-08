@@ -491,7 +491,7 @@ export default function Holidays() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fill, minmax(min(270px, 100%), 1fr))",
                 gap: "16px",
               }}
             >
@@ -899,7 +899,7 @@ export default function Holidays() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))",
                   gap: "16px",
                 }}
               >
@@ -1105,7 +1105,7 @@ function HolidayModal({ holiday, onClose, onSaved }) {
           />
         </label>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+        <div className="responsive-grid-2">
           <label>
             Date
             <input
@@ -1205,7 +1205,7 @@ function AnnouncementModal({ announcement, departments, onClose, onSaved }) {
           />
         </label>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+        <div className="responsive-grid-2">
           <label>
             Priority
             <select value={priority} onChange={(e) => setPriority(e.target.value)}>

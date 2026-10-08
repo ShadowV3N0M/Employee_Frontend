@@ -45,7 +45,7 @@ export default function PhoneInput({
         <span>{label} {required && "*"}</span>
       </label>
 
-      <div style={{ display: "flex", gap: "6px", alignItems: "stretch", width: "100%" }}>
+      <div style={{ display: "flex", gap: "6px", alignItems: "stretch", width: "100%", flexWrap: "wrap" }}>
         {/* Country Code Dropdown */}
         <select
           value={countryCode}
@@ -80,7 +80,7 @@ export default function PhoneInput({
         )}
 
         {/* 10-Digit Mobile Number Box */}
-        <div style={{ position: "relative", flex: 1, minWidth: 0 }}>
+        <div style={{ position: "relative", flex: "1 1 140px", minWidth: 0 }}>
           <input
             type="tel"
             inputMode="numeric"

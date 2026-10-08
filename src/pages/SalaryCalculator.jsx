@@ -824,7 +824,7 @@ export default function SalaryCalculator() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
               gap: "16px",
               paddingTop: "14px",
               borderTop: "1px dashed var(--border)",
@@ -914,7 +914,7 @@ export default function SalaryCalculator() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(220px, 100%), 1fr))",
                 gap: "16px",
                 marginTop: "16px",
                 paddingTop: "14px",
@@ -1104,7 +1104,7 @@ export default function SalaryCalculator() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(min(320px, 100%), 1fr))",
               gap: "20px",
             }}
           >
@@ -1610,9 +1610,8 @@ export default function SalaryCalculator() {
             </div>
 
             <div
+              className="responsive-grid-2"
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
                 gap: "10px",
                 marginBottom: "16px",
                 fontSize: "0.85rem",
@@ -1661,9 +1660,8 @@ export default function SalaryCalculator() {
             </div>
 
             <div
+              className="responsive-grid-2"
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
                 gap: "16px",
                 borderTop: "1px solid var(--border)",
                 paddingTop: "12px",
