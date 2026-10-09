@@ -3608,9 +3608,12 @@ select:focus {
 }
 
 @keyframes not-found-float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -3625,6 +3628,7 @@ select:focus {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -3853,6 +3857,7 @@ select:focus {
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -3861,31 +3866,39 @@ select:focus {
   .not-found-card {
     padding: 24px 16px;
   }
+
   .not-found-title {
     font-size: 1.45rem;
   }
+
   .not-found-suggestion-card {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .not-found-suggestion-card .btn {
     width: 100%;
     text-align: center;
   }
+
   .not-found-grid {
     grid-template-columns: 1fr;
   }
+
   .not-found-actions .btn {
     flex: 1;
     min-width: 130px;
   }
+
   .not-found-directory-header {
     flex-direction: column;
     align-items: stretch;
   }
+
   .not-found-search-wrap {
     width: 100%;
   }
+
   .not-found-path-pill {
     max-width: 220px;
   }
