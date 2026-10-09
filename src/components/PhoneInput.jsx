@@ -1,4 +1,5 @@
 import { COUNTRY_CODES, parsePhoneNumber } from "../phoneUtils";
+import FieldError from "./FieldError";
 
 /**
  * Reusable PhoneInput component with country code selector, optional custom code box,
@@ -13,6 +14,9 @@ export default function PhoneInput({
   setDigits,
   label = "Personal Mobile Phone",
   required = false,
+  error = "",
+  onBlur,
+  id = "phone-input",
 }) {
   const handleDigitsChange = (e) => {
     let val = e.target.value;
@@ -82,13 +86,18 @@ export default function PhoneInput({
         {/* 10-Digit Mobile Number Box */}
         <div style={{ position: "relative", flex: "1 1 140px", minWidth: 0 }}>
           <input
+            id={id}
             type="tel"
             inputMode="numeric"
             value={digits}
             onChange={handleDigitsChange}
+            onBlur={onBlur}
             placeholder="10-digit mobile number"
             maxLength={10}
             required={required}
+            className={error ? "input-error" : ""}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? `${id}-error` : undefined}
             style={{
               width: "100%",
               paddingRight: "48px",
@@ -113,20 +122,24 @@ export default function PhoneInput({
         </div>
       </div>
 
-      <small
-        style={{
-          display: "block",
-          fontSize: "0.74rem",
-          marginTop: "1px",
-          color: digits.length === 10 ? "var(--ok, #2b8a3e)" : "var(--muted)",
-        }}
-      >
-        {digits.length === 10
-          ? "✓ Valid 10-digit mobile number"
-          : digits.length > 0
-          ? `${10 - digits.length} more digit${10 - digits.length > 1 ? "s" : ""} required`
-          : "Select country code (+91 default) and enter 10-digit number"}
-      </small>
+      {error ? (
+        <FieldError error={error} id={`${id}-error`} />
+      ) : (
+        <small
+          style={{
+            display: "block",
+            fontSize: "0.74rem",
+            marginTop: "1px",
+            color: digits.length === 10 ? "var(--ok, #2b8a3e)" : "var(--muted)",
+          }}
+        >
+          {digits.length === 10
+            ? "✓ Valid 10-digit mobile number"
+            : digits.length > 0
+            ? `${10 - digits.length} more digit${10 - digits.length > 1 ? "s" : ""} required`
+            : "Select country code (+91 default) and enter 10-digit number"}
+        </small>
+      )}
     </div>
   );
 }

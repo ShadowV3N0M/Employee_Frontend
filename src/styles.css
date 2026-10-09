@@ -1249,6 +1249,63 @@ select:focus {
   border-color: var(--primary);
 }
 
+/* Form Field Validation States */
+input.input-error,
+select.input-error,
+textarea.input-error {
+  border-color: var(--danger) !important;
+  background-color: var(--danger-bg);
+  animation: field-shake 0.28s ease-in-out;
+}
+
+input.input-error:focus,
+select.input-error:focus,
+textarea.input-error:focus {
+  outline: 2px solid var(--danger);
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px rgba(214, 51, 108, 0.22);
+}
+
+.field-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--danger-text, var(--danger));
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-top: 3px;
+  line-height: 1.35;
+  animation: field-error-slide 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.field-error-icon {
+  flex-shrink: 0;
+  color: var(--danger);
+}
+
+@keyframes field-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-3px); }
+  40%, 80% { transform: translateX(3px); }
+}
+
+@keyframes field-error-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.required-asterisk {
+  color: var(--danger);
+  font-weight: bold;
+  margin-left: 2px;
+}
+
 /* Password input with show/hide toggle */
 .password-input-wrap {
   position: relative;
