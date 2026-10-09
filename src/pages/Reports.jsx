@@ -47,13 +47,14 @@ export default function Reports() {
   useEffect(() => {
     let cancelled = false;
     setLoadingData(true);
+    setError("");
 
     const loadAll = async () => {
       try {
         const [deptRes, empRes] = await Promise.all([
-          api.departments(),
+          api.listDepartments(),
           isPrivileged
-            ? api.getEmployees({ limit: 0, status: "all" })
+            ? api.listEmployees({ all_records: true, all: true, limit: 0, status: "all" })
             : api.getMyProfile().catch(() => null),
         ]);
 
@@ -63,24 +64,35 @@ export default function Reports() {
           setDepartments(deptRes);
         }
 
-        if (isPrivileged && empRes?.items) {
-          setEmployees(empRes.items);
-          if (empRes.items.length > 0) {
-            setPayslipEmpId(String(empRes.items[0].Emp_ID));
-            setRevisionEmpId(String(empRes.items[0].Emp_ID));
+        if (isPrivileged) {
+          const list = Array.isArray(empRes) ? empRes : (empRes?.items || []);
+          setEmployees(list);
+          if (list.length > 0) {
+            setPayslipEmpId((prev) => prev || String(list[0].Emp_ID));
+            setRevisionEmpId((prev) => prev || String(list[0].Emp_ID));
           }
-        } else if (!isPrivileged && empRes) {
-          // Regular user viewing their own
-          setPayslipEmpId(String(empRes.Emp_ID));
-          setRevisionEmpId(String(empRes.Emp_ID));
-          setEmployees([{
-            Emp_ID: empRes.Emp_ID,
-            F_Name: empRes.F_Name,
-            L_Name: empRes.L_Name,
-            Email: empRes.Email,
-          }]);
+        } else {
+          // Regular user viewing their own record
+          let prof = empRes;
+          if (!prof) {
+            prof = await api.getMySalaryProfile().catch(() => null);
+          }
+          if (prof && (prof.Emp_ID || prof.emp_id)) {
+            const empIdStr = String(prof.Emp_ID || prof.emp_id);
+            setPayslipEmpId(empIdStr);
+            setRevisionEmpId(empIdStr);
+            setEmployees([
+              {
+                Emp_ID: prof.Emp_ID || prof.emp_id,
+                F_Name: prof.F_Name || prof.name?.split(" ")[0] || "",
+                L_Name: prof.L_Name || prof.name?.split(" ").slice(1).join(" ") || "",
+                Email: prof.Email || prof.email || "",
+              },
+            ]);
+          }
         }
       } catch (err) {
+        console.error("Failed to load reports organizational directories:", err);
         if (!cancelled) setError("Failed to load organizational directories.");
       } finally {
         if (!cancelled) setLoadingData(false);
@@ -88,8 +100,22 @@ export default function Reports() {
     };
 
     loadAll();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [isPrivileged]);
+
+  // Ensure revisionEmpId and payslipEmpId default to first employee when list loads
+  useEffect(() => {
+    if (employees.length > 0) {
+      if (!revisionEmpId || !employees.some((e) => String(e.Emp_ID) === String(revisionEmpId))) {
+        setRevisionEmpId(String(employees[0].Emp_ID));
+      }
+      if (!payslipEmpId || !employees.some((e) => String(e.Emp_ID) === String(payslipEmpId))) {
+        setPayslipEmpId(String(employees[0].Emp_ID));
+      }
+    }
+  }, [employees, revisionEmpId, payslipEmpId]);
 
   const notify = (msg) => {
     setSuccessMsg(msg);
@@ -354,17 +380,23 @@ export default function Reports() {
             {/* Employee Selector */}
             {isPrivileged ? (
               <label>
-                <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>Select Employee</span>
+                <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>
+                  Select Employee {loadingData && "(Loading…)"}
+                </span>
                 <select
                   value={payslipEmpId}
                   onChange={(e) => setPayslipEmpId(e.target.value)}
-                  disabled={busy || loadingData}
+                  disabled={busy || loadingData || employees.length === 0}
                 >
-                  {employees.map((emp) => (
-                    <option key={emp.Emp_ID} value={emp.Emp_ID}>
-                      #{emp.Emp_ID} — {emp.F_Name} {emp.L_Name}
-                    </option>
-                  ))}
+                  {employees.length === 0 ? (
+                    <option value="">{loadingData ? "Loading employee roster…" : "No employees available"}</option>
+                  ) : (
+                    employees.map((emp) => (
+                      <option key={emp.Emp_ID} value={emp.Emp_ID}>
+                        #{emp.Emp_ID} — {emp.F_Name} {emp.L_Name}
+                      </option>
+                    ))
+                  )}
                 </select>
               </label>
             ) : (
@@ -434,7 +466,7 @@ export default function Reports() {
               type="button"
               className="btn ghost"
               onClick={handlePreviewPayslip}
-              disabled={busy || !payslipEmpId}
+              disabled={busy || (isPrivileged ? !payslipEmpId : false)}
               style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
               <span>👁️</span> {busy ? "Rendering..." : "Preview Payslip (PDF)"}
@@ -443,7 +475,7 @@ export default function Reports() {
               type="button"
               className="btn primary"
               onClick={handleDownloadPayslip}
-              disabled={busy || !payslipEmpId}
+              disabled={busy || (isPrivileged ? !payslipEmpId : false)}
               style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
               <span>⬇️</span> {busy ? "Downloading..." : "Download Official PDF Payslip"}
@@ -628,17 +660,23 @@ export default function Reports() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: "16px", marginTop: "16px" }}>
             {isPrivileged ? (
               <label>
-                <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>Select Employee</span>
+                <span className="small muted" style={{ display: "block", marginBottom: "4px" }}>
+                  Select Employee {loadingData && "(Loading…)"}
+                </span>
                 <select
                   value={revisionEmpId}
                   onChange={(e) => setRevisionEmpId(e.target.value)}
-                  disabled={busy || loadingData}
+                  disabled={busy || loadingData || employees.length === 0}
                 >
-                  {employees.map((emp) => (
-                    <option key={emp.Emp_ID} value={emp.Emp_ID}>
-                      #{emp.Emp_ID} — {emp.F_Name} {emp.L_Name}
-                    </option>
-                  ))}
+                  {employees.length === 0 ? (
+                    <option value="">{loadingData ? "Loading employee roster…" : "No employees available"}</option>
+                  ) : (
+                    employees.map((emp) => (
+                      <option key={emp.Emp_ID} value={emp.Emp_ID}>
+                        #{emp.Emp_ID} — {emp.F_Name} {emp.L_Name}
+                      </option>
+                    ))
+                  )}
                 </select>
               </label>
             ) : (
@@ -661,7 +699,7 @@ export default function Reports() {
               type="button"
               className="btn ghost"
               onClick={handlePreviewRevision}
-              disabled={busy || !revisionEmpId}
+              disabled={busy || (isPrivileged ? !revisionEmpId : false)}
               style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
               <span>👁️</span> {busy ? "Rendering..." : "Preview Letter (PDF)"}
@@ -670,7 +708,7 @@ export default function Reports() {
               type="button"
               className="btn primary"
               onClick={handleDownloadRevision}
-              disabled={busy || !revisionEmpId}
+              disabled={busy || (isPrivileged ? !revisionEmpId : false)}
               style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
               <span>⬇️</span> {busy ? "Downloading..." : "Download Revision Letter (PDF)"}

@@ -132,6 +132,7 @@ export const api = {
     }),
 
   // --- departments ---
+  departments: (params) => api.listDepartments(params),
   listDepartments: (params) => {
     const clean = Object.fromEntries(
       Object.entries(params || {}).filter(([_, v]) => v != null && v !== "")
@@ -149,6 +150,7 @@ export const api = {
     request("/departments/bulk-create", { method: "POST", body: { departments } }),
 
   // --- employees ---
+  getEmployees: (params) => api.listEmployees(params),
   listEmployees: (params) => {
     const clean = Object.fromEntries(
       Object.entries(params || {}).filter(([_, v]) => v != null && v !== "")
